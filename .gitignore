@@ -1,0 +1,25 @@
+.DS_Store
+
+vendor
+composer.lock
+
+*.zip
+
+zips/
+.idea/
+
+template_examples/
+
+# Images
+images/avatars/
+images/captchas/
+images/smileys/
+images/member_photos/
+images/signature_attachments/
+images/pm_attachments/
+
+# Caches
+sized/
+thumbs/
+_thumbs/
+*/expressionengine/cache/*
