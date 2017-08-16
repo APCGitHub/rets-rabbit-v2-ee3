@@ -1,0 +1,17 @@
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Anecka/rets-rabbit-plugin-core"
+        }
+    ],
+    "require": {
+        "rets-rabbit/cms-plugin-core": "dev-master",
+        "league/fractal": "^0.16.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Anecka\\RetsRabbit\\Transformers\\": "transforms"
+        }
+    }
+}
