@@ -16,8 +16,8 @@ class Property_transformer extends TransformerAbstract
         $data['has_photos'] = false;
         $data['total_photos'] = 0;
 
-        if(isset($data['photos'])) {
-            $count = sizeof($data['photos']);
+        if(isset($data['listing']) && isset($data['listing']['photos'])) {
+            $count = sizeof($data['listing']['photos']);
             if($count) {
                 $data['has_photos'] = true;
                 $data['total_photos'] = $count;
@@ -28,11 +28,11 @@ class Property_transformer extends TransformerAbstract
     }
 
     public function includePhotos($listing = array())
-    {   $photos = array();
+    {
+        if(isset($listing['listing']) && isset($listing['listing']['photos'])) {
+            return $this->collection($listing['listing']['photos'], new Photo_transformer);
+        }
 
-        if(isset($listing['photos']))
-            $photos = $listing['photos'];
-
-        return $this->collection($photos, new Photo_transformer);
+        return $this->null();
     }
 }
