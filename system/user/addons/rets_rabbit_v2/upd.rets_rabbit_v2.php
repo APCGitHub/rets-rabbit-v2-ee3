@@ -157,8 +157,8 @@ class Rets_rabbit_v2_upd
         $fields = array(
             'id'		     => array('type' => 'int', 'constraint' => '10', 'unsigned' => TRUE, 'auto_increment' => TRUE),
             'site_id'        => array('type' => 'int', 'constraint' => '10', 'unsigned' => TRUE),
-            'result_page'    => array('type' => 'varchar', 'constraint' => '2000'),
             'searched_at'	 => array('type' => 'datetime', 'null' => true),
+            'params'         => array('type' => 'text', 'null' => true),
             'short_code'     => array('type' => 'varchar', 'constraint' => '250', 'null' => TRUE),
         );
 
