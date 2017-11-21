@@ -1,4 +1,6 @@
-<?php
+<?php if (! defined('BASEPATH')) {
+    exit('No direct script access allowed');
+}
 
 /**
 * Rets_rabbit_v2 Module Class
@@ -12,30 +14,27 @@
 */
 
 require PATH_THIRD . "rets_rabbit_v2/vendor/autoload.php";
+require PATH_THIRD . "rets_rabbit_v2/config.php";
 
+use Anecka\RetsRabbit\Serializers\Rets_rabbit_array_serializer;
+use Anecka\RetsRabbit\Transforms\Property_transformer;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Collection;
-use League\Fractal\Serializer\ArraySerializer;
-use RetsRabbit\ApiService;
-use RetsRabbit\Bridges\EEBridge;
-use RetsRabbit\Resources\PropertiesResource;
 
 class Rets_rabbit_v2
 {
-    /**
-     * Api Service for RR API
-     *
-     * @var ApiService
-     */
-    private $apiService = null;
-
     /**
      * Site id for this instance
      *
      * @var int
      */
     private $siteId = 0;
+
+    /**
+     * @var Manager
+     */
+    private $fractal;
 
     /**
      * Constructor
@@ -46,28 +45,17 @@ class Rets_rabbit_v2
         ee()->load->library('Rets_rabbit_cache', null, 'Rr_cache');
         ee()->load->model('Rets_rabbit_config', 'Rr_config');
         ee()->load->model('Rets_rabbit_server', 'Rr_server');
-        ee()->load->library('Token_service', null, 'Token');
+        ee()->load->library('Properties_service', null, 'Rr_properties');
 
-        $bridge = new EEBridge;
-        $bridge->setTokenFetcher(function () {
-            return ee()->Rr_cache->get('access_token', true);
-        });
-
-        $this->apiService = new ApiService($bridge);
-        $this->siteId = ee()->config->item('site_id');
-
-        ee()->Rr_config->getBySiteId($this->siteId);
-        ee()->Token->setApiService($this->apiService);
-
-        if($customEndpoint = ee()->Rr_config->api_endpoint) {
-            $this->apiService->overrideBaseApiEndpoint($customEndpoint);
-        }
-
-        if(!ee()->Token->isValid()) {
-            ee()->Token->refresh();
-        }
+        $this->fractal = new Manager();
+        $this->fractal->setSerializer(new Rets_rabbit_array_serializer);
     }
 
+    /**
+     * Run a RESO query against the API to fetch properties.
+     * 
+     * @return array
+     */
     public function properties()
     {
         //Load libs
@@ -95,8 +83,7 @@ class Rets_rabbit_v2
 
         if(is_null($data) || !$data) {
             //Hit the API for data
-            $resource = new PropertiesResource($this->apiService);
-            $res = $resource->search($params);
+            $res = ee()->Rr_properties->search($params);
 
             if(!$res->didSucceed()) {
                 $cond['has_results'] = false;
@@ -113,10 +100,8 @@ class Rets_rabbit_v2
         }
 
         //Massage the data for view consumption
-        $fractal = new Manager();
-        $fractal->setSerializer(new ArraySerializer);
-        $resources = new Collection($data, new Anecka\RetsRabbit\Transforms\Property_transformer);
-        $viewData = $fractal->createData($resources)->toArray()['data'];
+        $resources = new Collection($data, new Property_transformer);
+        $viewData = $this->fractal->createData($resources)->toArray();
 
         return ee()->View_service
             ->setVariables($viewData)
@@ -125,6 +110,11 @@ class Rets_rabbit_v2
             ->process($cond['has_results']);
     }
 
+    /**
+     * Fetch a single property by msl id.
+     * 
+     * @return array
+     */
     public function property()
     {
         //Load libs
@@ -153,8 +143,7 @@ class Rets_rabbit_v2
 
         if(is_null($data) || !$data) {
             //Hit the API for data
-            $resource = new PropertiesResource($this->apiService);
-            $res = $resource->single(ee()->Tag->mls_id, $params);
+            $res = ee()->Rr_properties->find(ee()->Tag->mls_id, $params);
 
             if(!$res->didSucceed()) {
                 $cond['has_results'] = false;
@@ -171,15 +160,81 @@ class Rets_rabbit_v2
         }
 
         //Massage the data for view consumption
-        $fractal = new Manager();
-        $fractal->setSerializer(new ArraySerializer);
-        $resources = new Item($data, new Anecka\RetsRabbit\Transforms\Property_transformer);
-        $viewData = $fractal->createData($resources)->toArray()['data'];
+        $resources = new Item($data, new Property_transformer);
+        $viewData = $this->fractal->createData($resources)->toArray();
 
         return ee()->View_service
             ->setVariables($viewData)
             ->stripTags(ee()->Tag->strip_tags)
             ->setConditionals($cond)
             ->process($cond['has_results']);
+    }
+
+    /**
+     * Create a RR search form
+     */
+    public function search_form()
+    {
+        ee()->load->helper('form');
+
+        $shortCode = ee()->TMPL->fetch_param("short_code", '');
+        $resultsPath = ee()->TMPL->fetch_param('results_path', ee()->uri->uri_string());
+
+        $hiddenFields = array(
+            'ACT'            => ee()->functions->fetch_action_id(RETS_RABBIT_V2_NAME, 'run_search'),
+            'results_path'    => $resultsPath,
+            'short_code'      => $shortCode,
+        );
+
+        $formAttrs = array(
+            'name'           => 'search_results',
+            'id'             => ee()->TMPL->form_id,
+            'class'          => ee()->TMPL->form_class,
+        );
+
+        $variable = array();
+        $tagdata = ee()->TMPL->tagdata;
+
+        $output = form_open('', $formAttrs, $hiddenFields);
+        $output .= ee()->TMPL->parse_variables($tagdata, array($variable));
+        $output .= "</form>";
+
+        return $output;
+    }
+
+    /**
+     * Run a search against the RR API.
+     * 
+     * @description This method acts more like a controller endpoint
+     * since EE doesn't support actual controllers.
+     */
+    public function run_search()
+    {
+        ee()->load->library('Forms_service', null, 'Forms');
+        ee()->load->model('Rets_rabbit_search');
+
+        $params = array();
+
+        if(isset($_POST)) {
+            $resoParams = ee()->Forms->toReso($_POST);
+
+            $data = array(
+                'params' => $resoParams
+            );
+
+            if(isset($_POST['short_code'])) {
+                $data['short_code'] = $_POST['short_code'];
+            }
+
+            ee()->Rets_rabbit_search->insert($data);
+        }
+    }
+
+    /**
+     * Get search results from the RR API.
+     */
+    public function search_results()
+    {
+
     }
 }
