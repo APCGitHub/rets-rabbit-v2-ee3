@@ -6,11 +6,12 @@
         }
     ],
     "require": {
-        "rets-rabbit/cms-plugin-core": "dev-master",
+        "rets-rabbit/cms-plugin-core": "^1.0",
         "league/fractal": "^0.16.0"
     },
     "autoload": {
         "psr-4": {
+            "Anecka\\RetsRabbit\\Serializers\\": "serializers",
             "Anecka\\RetsRabbit\\Transformers\\": "transforms"
         }
     }
