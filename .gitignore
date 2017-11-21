@@ -5,6 +5,8 @@ composer.lock
 
 *.zip
 
+.phpintel
+
 zips/
 .idea/
 
