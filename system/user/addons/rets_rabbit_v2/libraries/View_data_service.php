@@ -23,12 +23,6 @@ class View_data_service
     private $stripTags = false;
 
     /**
-     * Constructor
-     */
-    public function __construct()
-    {}
-
-    /**
      * Set the view variables
      *
      * @param array $data
