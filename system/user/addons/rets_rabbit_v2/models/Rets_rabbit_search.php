@@ -2,7 +2,7 @@
 
 class Rets_rabbit_search extends CI_Model
 {
-    public $id, 
+    public $id;
     public $site_id;
     public $params;
     public $searched_at;
