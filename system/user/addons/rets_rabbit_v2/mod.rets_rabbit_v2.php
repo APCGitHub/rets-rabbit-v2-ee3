@@ -49,6 +49,7 @@ class Rets_rabbit_v2
 
         $this->fractal = new Manager();
         $this->fractal->setSerializer(new Rets_rabbit_array_serializer);
+        $this->siteId = ee()->config->item('site_id');
     }
 
     /**
@@ -210,6 +211,7 @@ class Rets_rabbit_v2
      */
     public function run_search()
     {
+        ee()->load->library('logger');
         ee()->load->library('Forms_service', null, 'Forms');
         ee()->load->model('Rets_rabbit_search');
 
@@ -219,7 +221,8 @@ class Rets_rabbit_v2
             $resoParams = ee()->Forms->toReso($_POST);
 
             $data = array(
-                'params' => $resoParams
+                'params' => $resoParams,
+                'site_id' => $this->siteId
             );
 
             if(isset($_POST['short_code'])) {
@@ -227,6 +230,23 @@ class Rets_rabbit_v2
             }
 
             ee()->Rets_rabbit_search->insert($data);
+
+            $resultsPath = $_POST['results_path'];
+            preg_match_all("/:([^\)]*):/", $resultsPath, $matches);
+
+            if(sizeof($matches) == 2) {
+                $match = $matches[0][0];
+
+                if($match !== ':search_id:') {
+                    $resultsPath = str_replace($matches[0][0], ee()->Rets_rabbit_search->id, $resultsPath);
+                } else {
+
+                }
+            } else {
+               $resultsPath .= ee()->Rets_rabbit_search->id;
+            }
+            
+            ee()->functions->redirect($resultsPath);
         }
     }
 
