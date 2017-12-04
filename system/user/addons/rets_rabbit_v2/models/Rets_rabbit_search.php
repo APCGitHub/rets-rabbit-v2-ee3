@@ -19,7 +19,8 @@ class Rets_rabbit_search extends CI_Model
      * @param  int $id
      * @return array|null
      */
-    public function get($id) {
+    public function get($id) 
+    {
         $query = ee()->db->get_where('rets_rabbit_v2_searches', array('id' => $id));
         
         if($query->num_rows() == 1) 
@@ -43,7 +44,13 @@ class Rets_rabbit_search extends CI_Model
         return null;
     }
 
-    public function insert($data) {
+    /**
+     * Insert a new search
+     * 
+     * @param  array $data
+     */
+    public function insert($data) 
+    {
         $this->prepSave($data);
 
         ee()->db->insert('rets_rabbit_v2_searches', $this);
@@ -51,25 +58,48 @@ class Rets_rabbit_search extends CI_Model
         $this->id = ee()->db->insert_id();
     }
 
-    public function update($data, $id) {
+    /**
+     * Update a search record 
+     * @param  array $data
+     * @param  int $id  
+     */
+    public function update($data, $id) 
+    {
         $this->prepSave($data);
         $this->id = $id;
 
         ee()->db->update('rets_rabbit_v2_searches', $this, array('id' => $id));
     }
 
-    public function clearOldSearches() {
+    /**
+     * Clear searches older than 7 days ago
+     * 
+     */
+    public function clearOldSearches() 
+    {
         ee()->db->delete('rets_rabbit_v2_searches', array('search_date' => "< DATE_SUB(NOW(), 7 DAYS)"));
     }
 
-    private function prepSave($data) {
+    /**
+     * Prepare the data for insertion into DB
+     * 
+     * @param  array $data 
+     */
+    private function prepSave($data) 
+    {
         $this->site_id = $data['site_id'];
         $this->params = json_encode($data['params']);
         $this->searched_at = ee()->localize->now;
         $this->short_code = $data['short_code'];
     }
 
-    private function setResult($row) {
+    /**
+     * Set the model object from the results array row
+     * 
+     * @param array $row
+     */
+    private function setResult($row) 
+    {
         $this->id = $row->id;
         $this->site_id = $row->site_id;
         $this->params = json_decode($row->params, true);
