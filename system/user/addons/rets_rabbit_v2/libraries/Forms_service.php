@@ -14,12 +14,12 @@ class Forms_service
 	 */
 	public function toReso($params = array())
 	{
-		$reso = (new QueryParser)->format($params);
+		$reso = (new QueryParser)->useAlternateSyntax()->format($params);
 		$reso = array_filter($reso, function ($value) {
 			return !empty($value);
 		});
 
-		ee()->TMPL->log_item("RETS QUERY: ".var_export($reso, true));
+		ee()->logger->developer("RETS QUERY: ".var_export($reso, true));
 
 		return $reso;
 	}
