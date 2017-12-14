@@ -25,8 +25,6 @@ class Rets_rabbit_search extends CI_Model
         
         if($query->num_rows() == 1) 
         	$this->setResult($query->row());
-
-        return null;
     }
 
     /**
@@ -40,8 +38,6 @@ class Rets_rabbit_search extends CI_Model
 
         if($query->num_rows() == 1) 
         	$this->setResult($query->row());
-
-        return null;
     }
 
     /**
@@ -103,7 +99,7 @@ class Rets_rabbit_search extends CI_Model
         $this->id = $row->id;
         $this->site_id = $row->site_id;
         $this->params = json_decode($row->params, true);
-        $this->searched_at = $row->search_date;
+        $this->searched_at = $row->searched_at;
         $this->short_code = $row->short_code;
     }
 }

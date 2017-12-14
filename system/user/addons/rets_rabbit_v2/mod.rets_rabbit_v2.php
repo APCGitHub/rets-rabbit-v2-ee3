@@ -235,12 +235,12 @@ class Rets_rabbit_v2
             preg_match_all("/:([^\)]*):/", $resultsPath, $matches);
 
             if(sizeof($matches) == 2) {
-                $match = $matches[0][0];
+                $match = trim($matches[0][0]);
 
-                if($match !== ':search_id:') {
+                if($match == ':search_id:') {
                     $resultsPath = str_replace($matches[0][0], ee()->Rets_rabbit_search->id, $resultsPath);
                 } else {
-
+                    ee()->output->fatal_error('You must use :search_id: in your results path as the target search id token. You supplied the following token: ' . $match, 500);
                 }
             } else {
                $resultsPath .= ee()->Rets_rabbit_search->id;
@@ -255,6 +255,66 @@ class Rets_rabbit_v2
      */
     public function search_results()
     {
+        ee()->load->model('Rets_rabbit_search');
+        ee()->load->library('tags/Search_results_tag', null, 'Tag');
+        ee()->load->library('View_data_service', null, 'View_service');
 
+        //Parse template params
+        ee()->Tag->parseParams();
+
+        $searchId = ee()->Tag->search_id;
+        ee()->Rets_rabbit_search->get($searchId);
+        $params = ee()->Rets_rabbit_search->params;
+
+        if(ee()->Tag->select) {
+            $params['$select'] = ee()->Tag->select;
+        }
+
+        if(ee()->Tag->orderby) {
+            $params['$orderby'] = ee()->Tag->orderby;
+        }
+
+        $cacheKey = serialize($params);
+        $cacheKey = hash('sha256', $cacheKey);
+
+        //Set the view data props
+        $data = array();
+        $cond = array(
+            'has_results'   => true,
+            'has_error'     => false
+        );
+
+        //Check if caching results
+        if(ee()->Tag->cache) {
+            $data = ee()->Rr_cache->get($cacheKey);
+        }
+
+        if(is_null($data) || !$data) {
+            //Hit the API for data
+            $res = ee()->Rr_properties->search($params);
+
+            if(!$res->didSucceed()) {
+                $cond['has_results'] = false;
+                $cond['has_error'] = true;
+            } else {
+                $data = $res->getResponse()['value'];
+
+                ee()->Rr_cache->set($cacheKey, $data, ee()->Tag->cache_duration);
+            }
+        }
+
+        if(empty($data)) {
+            $cond['has_results'] = false;
+        }
+
+        //Massage the data for view consumption
+        $resources = new Collection($data, new Property_transformer);
+        $viewData = $this->fractal->createData($resources)->toArray();
+
+        return ee()->View_service
+            ->setVariables($viewData)
+            ->stripTags(ee()->Tag->strip_tags)
+            ->setConditionals($cond)
+            ->process($cond['has_results']);
     }
 }
