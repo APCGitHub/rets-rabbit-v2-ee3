@@ -255,6 +255,7 @@ class Rets_rabbit_v2
      */
     public function search_results()
     {
+        ee()->load->library('pagination');
         ee()->load->model('Rets_rabbit_search');
         ee()->load->library('tags/Search_results_tag', null, 'Tag');
         ee()->load->library('View_data_service', null, 'View_service');
@@ -263,19 +264,32 @@ class Rets_rabbit_v2
         ee()->Tag->parseParams();
 
         $searchId = ee()->Tag->search_id;
+        $pagination = ee()->pagination->create();
+
+        //Remove pagination from template
+        ee()->TMPL->tagdata = $pagination->prepare(ee()->TMPL->tagdata);
+
+        //Fetch the search query from the DB
         ee()->Rets_rabbit_search->get($searchId);
+
+        if(!ee()->Rets_rabbit_search->id) {
+            ee()->output->fatal_error('We could not find a search.', 500);
+        }
+
+        //Search Params
         $params = ee()->Rets_rabbit_search->params;
+        $overrideParams = ee()->Tag->toApiParams();
+        $params = array_merge($params, $overrideParams);
 
-        if(ee()->Tag->select) {
-            $params['$select'] = ee()->Tag->select;
-        }
+        //Count Params
+        $countParams = array(
+            '$select' => ee()->Tag->getCountMethod(),
+            '$filter' => $params['$filter']
+        );
+        $countError = false;
 
-        if(ee()->Tag->orderby) {
-            $params['$orderby'] = ee()->Tag->orderby;
-        }
-
-        $cacheKey = serialize($params);
-        $cacheKey = hash('sha256', $cacheKey);
+        //Generate count hash key
+        $countCacheKey = hash('sha256', serialize($countParams));
 
         //Set the view data props
         $data = array();
@@ -283,12 +297,62 @@ class Rets_rabbit_v2
             'has_results'   => true,
             'has_error'     => false
         );
+        $total = ee()->Rr_cache->get($countCacheKey);
+
+        //Fetch search count
+        if(is_null($total) || !$total) {
+            //Hit the API for data
+            $res = ee()->Rr_properties->search($countParams);
+
+            if(!$res->didSucceed()) {
+                $countError = true;
+            } else {
+                $total = $res->getResponse()['@retsrabbit.total_results'];
+
+                ee()->Rr_cache->set($countCacheKey, $total, 3600);
+            }
+        }
+
+        //Render the view of the pagination failed for some reason
+        if(is_null($total) || !$total) {
+            $cond['has_results'] = false;
+            $cond['has_error'] = true;
+
+             //Massage the data for view consumption
+            $resources = new Collection($data, new Property_transformer);
+            $viewData = $this->fractal->createData($resources)->toArray();
+
+            return ee()->View_service
+                ->paginate($pagination)
+                ->setVariables($viewData)
+                ->stripTags(ee()->Tag->strip_tags)
+                ->setConditionals($cond)
+                ->process($cond['has_results']);
+        }
+
+        if($pagination->paginate === TRUE) {
+            //Build the pagination
+            $pagination->build($total, ee()->Tag->per_page);
+
+            
+            //Get the current page
+            $currentPage = $pagination->current_page;
+
+            //Set the offset based on the current page
+            if($currentPage > 1) {
+                $params['$skip'] = ($currentPage - 1) * $params['$top'];
+            }
+        }
 
         //Check if caching results
         if(ee()->Tag->cache) {
-            $data = ee()->Rr_cache->get($cacheKey);
+            $data = ee()->Rr_cache->get($searchCacheKey);
         }
 
+        //Generate search hash key
+        $searchCacheKey = hash('sha256', serialize($params));
+
+        //Fetch search results
         if(is_null($data) || !$data) {
             //Hit the API for data
             $res = ee()->Rr_properties->search($params);
@@ -299,7 +363,7 @@ class Rets_rabbit_v2
             } else {
                 $data = $res->getResponse()['value'];
 
-                ee()->Rr_cache->set($cacheKey, $data, ee()->Tag->cache_duration);
+                ee()->Rr_cache->set($searchCacheKey, $data, ee()->Tag->cache_duration);
             }
         }
 
@@ -312,6 +376,7 @@ class Rets_rabbit_v2
         $viewData = $this->fractal->createData($resources)->toArray();
 
         return ee()->View_service
+            ->paginate($pagination)
             ->setVariables($viewData)
             ->stripTags(ee()->Tag->strip_tags)
             ->setConditionals($cond)

@@ -23,6 +23,21 @@ class View_data_service
     private $stripTags = false;
 
     /**
+     * @var  bool
+     */
+    private $paginator = null;
+
+    /**
+     * @var null
+     */
+    private $totalRecords = null;
+
+    /**
+     * @var null
+     */
+    private $perPage = null;
+
+    /**
      * Set the view variables
      *
      * @param array $data
@@ -59,6 +74,20 @@ class View_data_service
     }
 
     /**
+     * Set the total items and the per page.
+     * 
+     * @param  int $total  
+     * @param  int $perPage
+     * @return $this
+     */
+    public function paginate(&$paginator)
+    {
+        $this->paginator = $paginator;
+
+        return $this;
+    }
+
+    /**
      * Process the template data and fill in variables
      *
      * @param  boolean $hasResults
@@ -80,7 +109,13 @@ class View_data_service
         else
             $output = ee()->TMPL->no_results();
 
+        //Set output
         ee()->TMPL->tagdata = $output;
+
+        if($this->paginator && $this->paginator->paginate === TRUE) {
+            //Set final output with pagination
+            ee()->TMPL->tagdata = $this->paginator->render(ee()->TMPL->tagdata);
+        }
 
         return ee()->TMPL->tagdata;
     }

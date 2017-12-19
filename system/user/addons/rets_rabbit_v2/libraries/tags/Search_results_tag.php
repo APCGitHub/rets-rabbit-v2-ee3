@@ -13,9 +13,11 @@ class Search_results_tag extends Base_tag
     	'search_id' 	=> null,
     	'select' 		=> null,
         'orderby'       => null,
+        'per_page'      => 12,
     	'cache'         => false,
         'strip_tags'    => false,
         'cache_duration'=> 3600,
+        'count'         => 'estimated'
     );
 
     /**
@@ -30,7 +32,11 @@ class Search_results_tag extends Base_tag
      *
      * @var array
      */
-    protected $map = array();
+    protected $map = array(
+        'select'    => '$select',
+        'orderby'   => '$orderby',
+        'per_page'  => '$top',
+    );
 
     /**
      * Casts for param types
@@ -44,7 +50,7 @@ class Search_results_tag extends Base_tag
      *
      * @var array
      */
-    protected $apiParams = array();
+    protected $apiParams = array('select', 'orderby', 'per_page');
 
     /**
      * Rules for value setting
@@ -69,11 +75,31 @@ class Search_results_tag extends Base_tag
                 $key = $_v;
             }
 
-            $v = ee()->TMPL->fetch_param($key);
+            $v = trim(ee()->TMPL->fetch_param($key));
+
+            if($key === 'count') {
+                if($v !== 'exact') {
+                    $v = 'estimated';
+                }
+            }
 
             $params[$key] = $v;
         }
 
         $this->params = $params;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountMethod()
+    {
+        $count = $this->count;
+
+        if($count == 'exact') {
+            return 'total_results';
+        }
+
+        return 'estimated_results';
     }
 }
