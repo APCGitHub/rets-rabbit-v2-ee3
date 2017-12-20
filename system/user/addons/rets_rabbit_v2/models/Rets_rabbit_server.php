@@ -59,7 +59,11 @@ class Rets_rabbit_server extends CI_Model
      */
     public function getBySiteId($siteId = 0)
     {
-        $query = ee()->db->get_where('rets_rabbit_v2_servers', array('site_id' => $siteId));
+        $query = ee()->db->get_where('rets_rabbit_v2_servers', 
+            array(
+                'site_id' => $siteId
+            )
+        );
         $servers = array();
 
         if($query->num_rows() > 0) {
@@ -70,6 +74,28 @@ class Rets_rabbit_server extends CI_Model
         }
 
         return $servers;
+    }
+
+    /**
+     * Get a server by short code
+     * @param  string $siteId   
+     * @param  string $shortCode
+     */
+    public function getByShortCode($siteId = '', $shortCode = '')
+    {
+        $query = ee()->db->get_where('rets_rabbit_v2_servers', 
+            array(
+                'site_id' => $siteId, 'short_code' => $shortCode
+            )
+        );
+
+        if($query->num_rows() >= 1) {
+            $row = $query->row();
+
+            return $row->server_id;
+        }
+
+        return '';
     }
 
     /**
