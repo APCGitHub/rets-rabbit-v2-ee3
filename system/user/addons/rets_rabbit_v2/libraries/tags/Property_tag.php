@@ -47,7 +47,8 @@ class Property_tag extends Base_tag
      * @var array
      */
     protected $casts = array(
-        'cache' => 'bool'
+        'cache'     => 'bool',
+        'strip_tags'=> 'bool'
     );
 
     /**
