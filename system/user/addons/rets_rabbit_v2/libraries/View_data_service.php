@@ -93,7 +93,7 @@ class View_data_service
      * @param  boolean $hasResults
      * @return mixed
      */
-    public function process($hasResults = false)
+    public function process($hasResults = 'FALSE')
     {
         $tagdata = ee()->TMPL->tagdata;
 
@@ -104,7 +104,7 @@ class View_data_service
             $tagdata = ee()->functions->prep_conditionals($tagdata, $this->conditionals);
         }
 
-        if($hasResults)
+        if($hasResults === 'TRUE')
             $output = ee()->TMPL->parse_variables($tagdata, $this->variables);
         else
             $output = ee()->TMPL->no_results();
@@ -112,6 +112,7 @@ class View_data_service
         //Set output
         ee()->TMPL->tagdata = $output;
 
+        //Render pagination if markup requires it
         if($this->paginator && $this->paginator->paginate === TRUE) {
             //Set final output with pagination
             ee()->TMPL->tagdata = $this->paginator->render(ee()->TMPL->tagdata);
