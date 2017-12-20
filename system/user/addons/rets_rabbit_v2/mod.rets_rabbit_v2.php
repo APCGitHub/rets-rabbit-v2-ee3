@@ -68,13 +68,29 @@ class Rets_rabbit_v2
 
         //Convert params to search terms
         $params = ee()->Tag->toApiParams();
+
+        if(ee()->Tag->short_code) {
+            $serverId = ee()->Rr_server->getByShortCode($this->siteId, ee()->Tag->short_code);
+
+            if(!$serverId) {
+                ee()->output->fatal_error("Could not find a server having short code: " . ee()->Tag->short_code, 404);
+            }
+
+            if(isset($params['$filter']) && strlen($params['$filter'])) {
+                $params['$filter'] .= ' and server_id eq ' . $serverId;
+            } else {
+                $params['$filter'] = "server_id eq $serverId";
+            }
+        }
+
+        //Generate cache key
         $cacheKey = hash('sha256', serialize($params));
 
         //Set the view data props
         $data = array();
         $cond = array(
-            'has_results'   => true,
-            'has_error'     => false
+            'has_results'   => 'TRUE',
+            'has_error'     => 'FALSE'
         );
 
         //See if we are caching
@@ -87,8 +103,9 @@ class Rets_rabbit_v2
             $res = ee()->Rr_properties->search($params);
 
             if(!$res->didSucceed()) {
-                $cond['has_results'] = false;
-                $cond['has_error'] = true;
+                $cond['has_results'] = 'FALSE';
+                $cond['has_error'] = 'TRUE';
+                $data = array();
             } else {
                 $data = $res->getResponse()['value'];
 
@@ -97,7 +114,7 @@ class Rets_rabbit_v2
         }
 
         if(empty($data)) {
-            $cond['has_results'] = false;
+            $cond['has_results'] = 'FALSE';
         }
 
         //Massage the data for view consumption
@@ -133,8 +150,8 @@ class Rets_rabbit_v2
         //Set the view data props
         $data = array();
         $cond = array(
-            'has_results'   => true,
-            'has_error'     => false
+            'has_results'   => 'TRUE',
+            'has_error'     => 'FALSE'
         );
 
         //Check if caching results
@@ -147,22 +164,22 @@ class Rets_rabbit_v2
             $res = ee()->Rr_properties->find(ee()->Tag->mls_id, $params);
 
             if(!$res->didSucceed()) {
-                $cond['has_results'] = false;
-                $cond['has_error'] = true;
+                $cond['has_results'] = 'FALSE';
+                $cond['has_error'] = 'TRUE';
             } else {
-                $data = $res->getResponse()['value'];
+                $data = $res->getResponse();
 
                 ee()->Rr_cache->set($cacheKey, $data, ee()->Tag->cache_duration);
             }
         }
 
         if(empty($data)) {
-            $cond['has_results'] = false;
+            $cond['has_results'] = 'FALSE';
         }
 
         //Massage the data for view consumption
         $resources = new Item($data, new Property_transformer);
-        $viewData = $this->fractal->createData($resources)->toArray();
+        $viewData = array($this->fractal->createData($resources)->toArray());
 
         return ee()->View_service
             ->setVariables($viewData)
