@@ -145,6 +145,22 @@ class Rets_rabbit_v2
 
         //Convert params to search terms
         $params = ee()->Tag->toApiParams();
+
+        //See if short code supplied
+        if(ee()->Tag->short_code) {
+            $serverId = ee()->Rr_server->getByShortCode($this->siteId, ee()->Tag->short_code);
+
+            if(!$serverId) {
+                ee()->output->fatal_error("Could not find a server having short code: " . ee()->Tag->short_code, 404);
+            }
+
+            if(isset($params['$filter']) && strlen($params['$filter'])) {
+                $params['$filter'] .= ' and server_id eq ' . $serverId;
+            } else {
+                $params['$filter'] = "server_id eq $serverId";
+            }
+        }
+        
         $cacheKey = md5(ee()->Tag->mls_id) . serialize($params);
         $cacheKey = hash('sha256', $cacheKey);
 
