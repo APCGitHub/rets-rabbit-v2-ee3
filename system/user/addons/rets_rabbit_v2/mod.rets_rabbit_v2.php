@@ -69,6 +69,7 @@ class Rets_rabbit_v2
         //Convert params to search terms
         $params = ee()->Tag->toApiParams();
 
+        //See if short code supplied
         if(ee()->Tag->short_code) {
             $serverId = ee()->Rr_server->getByShortCode($this->siteId, ee()->Tag->short_code);
 
@@ -197,12 +198,16 @@ class Rets_rabbit_v2
 
         $shortCode = ee()->TMPL->fetch_param("short_code", '');
         $resultsPath = ee()->TMPL->fetch_param('results_path', ee()->uri->uri_string());
+        $actionUrl = ee()->functions->fetch_action_id(RETS_RABBIT_V2_NAME, 'run_search');
 
         $hiddenFields = array(
-            'ACT'            => ee()->functions->fetch_action_id(RETS_RABBIT_V2_NAME, 'run_search'),
-            'results_path'    => $resultsPath,
-            'short_code'      => $shortCode,
+            'ACT'           => $actionUrl,
+            'results_path'  => $resultsPath,
         );
+
+        if($shortCode) {
+            $hiddenFields['short_code'] = $shortCode;
+        }
 
         $formAttrs = array(
             'name'           => 'search_results',
@@ -290,13 +295,27 @@ class Rets_rabbit_v2
         ee()->Rets_rabbit_search->get($searchId);
 
         if(!ee()->Rets_rabbit_search->id) {
-            ee()->output->fatal_error('We could not find a search.', 500);
+            ee()->output->fatal_error('We could not find a search.', 404);
         }
 
         //Search Params
         $params = ee()->Rets_rabbit_search->params;
         $overrideParams = ee()->Tag->toApiParams();
         $params = array_merge($params, $overrideParams);
+
+        if(ee()->Rets_rabbit_search->short_code) {
+            $serverId = ee()->Rr_server->getByShortCode($this->siteId, ee()->Rets_rabbit_search->short_code);
+
+            if(!$serverId) {
+                ee()->output->fatal_error("Could not find a server having short code: " . ee()->Rets_rabbit_search->short_code, 404);
+            }
+
+            if(isset($params['$filter']) && strlen($params['$filter'])) {
+                $params['$filter'] .= ' and server_id eq ' . $serverId;
+            } else {
+                $params['$filter'] = "server_id eq $serverId";
+            }
+        }
 
         //Count Params
         $countParams = array(
@@ -311,8 +330,8 @@ class Rets_rabbit_v2
         //Set the view data props
         $data = array();
         $cond = array(
-            'has_results'   => true,
-            'has_error'     => false
+            'has_results'   => 'TRUE',
+            'has_error'     => 'FALSE'
         );
         $total = ee()->Rr_cache->get($countCacheKey);
 
@@ -332,8 +351,8 @@ class Rets_rabbit_v2
 
         //Render the view of the pagination failed for some reason
         if(is_null($total) || !$total) {
-            $cond['has_results'] = false;
-            $cond['has_error'] = true;
+            $cond['has_results'] = 'FALSE';
+            $cond['has_error'] = 'TRUE';
 
              //Massage the data for view consumption
             $resources = new Collection($data, new Property_transformer);
@@ -375,8 +394,8 @@ class Rets_rabbit_v2
             $res = ee()->Rr_properties->search($params);
 
             if(!$res->didSucceed()) {
-                $cond['has_results'] = false;
-                $cond['has_error'] = true;
+                $cond['has_results'] = 'FALSE';
+                $cond['has_error'] = 'TRUE';
             } else {
                 $data = $res->getResponse()['value'];
 
@@ -385,7 +404,7 @@ class Rets_rabbit_v2
         }
 
         if(empty($data)) {
-            $cond['has_results'] = false;
+            $cond['has_results'] = 'FALSE';
         }
 
         //Massage the data for view consumption
