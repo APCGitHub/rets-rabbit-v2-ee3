@@ -8,11 +8,6 @@ class Rets_rabbit_search extends CI_Model
     public $searched_at;
     public $short_code;
 
-    public function __construct()
-    {
-    	parent::__construct();
-    }
-
     /**
      * Fetch a search by id
      * 
@@ -83,9 +78,12 @@ class Rets_rabbit_search extends CI_Model
      */
     private function prepSave($data) 
     {
+        $now = ee()->localize->now;
+        $dt = DateTime::createFromFormat('U', $now);
+
         $this->site_id = $data['site_id'];
         $this->params = json_encode($data['params']);
-        $this->searched_at = ee()->localize->now;
+        $this->searched_at = $dt->format('Y-m-d H:i:s');
         $this->short_code = $data['short_code'];
     }
 
