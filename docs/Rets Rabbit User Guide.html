@@ -1,0 +1,1090 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <style>
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        blockquote {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+            font-size: 13px;
+            line-height: 18px;
+            color: #737373;
+            background-color: white;
+            margin: 10px 13px 10px 13px;
+        }
+
+        table {
+            margin: 10px 0 15px 0;
+            border-collapse: collapse;
+        }
+
+        td,
+        th {
+            border: 1px solid #ddd;
+            padding: 3px 10px;
+        }
+
+        th {
+            padding: 5px 10px;
+        }
+
+        a {
+            color: #0069d6;
+        }
+
+        a:hover {
+            color: #0050a3;
+            text-decoration: none;
+        }
+
+        a img {
+            border: none;
+        }
+
+        p {
+            margin-bottom: 9px;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: #404040;
+            line-height: 36px;
+        }
+
+        h1 {
+            margin-bottom: 18px;
+            font-size: 30px;
+        }
+
+        h2 {
+            font-size: 24px;
+        }
+
+        h3 {
+            font-size: 18px;
+        }
+
+        h4 {
+            font-size: 16px;
+        }
+
+        h5 {
+            font-size: 14px;
+        }
+
+        h6 {
+            font-size: 13px;
+        }
+
+        hr {
+            margin: 0 0 19px;
+            border: 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        blockquote {
+            padding: 13px 13px 21px 15px;
+            margin-bottom: 18px;
+            font-family: georgia, serif;
+            font-style: italic;
+        }
+
+        blockquote:before {
+            content: "\201C";
+            font-size: 40px;
+            margin-left: -10px;
+            font-family: georgia, serif;
+            color: #eee;
+        }
+
+        blockquote p {
+            font-size: 14px;
+            font-weight: 300;
+            line-height: 18px;
+            margin-bottom: 0;
+            font-style: italic;
+        }
+
+        code,
+        pre {
+            font-family: Monaco, Andale Mono, Courier New, monospace;
+        }
+
+        code {
+            background-color: #fee9cc;
+            color: rgba(0, 0, 0, 0.75);
+            padding: 1px 3px;
+            font-size: 12px;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+        }
+
+        pre {
+            display: block;
+            padding: 14px;
+            margin: 0 0 18px;
+            line-height: 16px;
+            font-size: 11px;
+            border: 1px solid #d9d9d9;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        pre code {
+            background-color: #fff;
+            color: #737373;
+            font-size: 11px;
+            padding: 0;
+        }
+
+        sup {
+            font-size: 0.83em;
+            vertical-align: super;
+            line-height: 0;
+        }
+
+        * {
+            -webkit-print-color-adjust: exact;
+        }
+
+        @media screen and (min-width: 914px) {
+            body {
+                width: 854px;
+                margin: 10px auto;
+            }
+        }
+
+        @media print {
+            body,
+            code,
+            pre code,
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                color: black;
+            }
+            table,
+            pre {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+    <title>Rets Rabbit for ExpressionEngine&reg; User Guide</title>
+
+</head>
+
+<body>
+    <h1>Rets Rabbit V2 for ExpressionEngine&reg; User Guide</h1>
+
+    <hr />
+
+    <p>
+        <em>Author:</em> Patrick Pohler</p>
+
+    <p>
+        <em>Version:</em> 1.0.0</p>
+
+    <p>
+        <em>URL:</em>
+        <a href="http://retsrabbit.com">http://retsrabbit.com</a>
+    </p>
+
+    <p>
+        <em>License:</em> Creative Commons Attribution-NoDerivatives 4.0
+        <a href="http://creativecommons.org/licenses/by-nd/4.0/legalcode">http://creativecommons.org/licenses/by-nd/4.0/legalcode</a>
+    </p>
+
+    <hr />
+
+    <p>Thank you for your purchase! If you have any questions about the module, please email us at
+        <strong>
+            <a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#x63;&#x6f;&#x6e;&#116;&#x61;&#x63;&#116;&#x40;&#114;&#101;&#116;&#x73;&#114;&#x61;&#98;&#x62;&#x69;&#116;&#46;&#x63;&#x6f;&#109;">&#x63;&#111;&#x6e;&#116;&#x61;&#x63;&#116;&#x40;&#114;&#x65;&#116;&#115;&#114;&#x61;&#x62;&#98;&#x69;&#116;&#46;&#x63;&#x6f;&#109;</a>
+        </strong>
+    </p>
+
+    <hr />
+
+    <h2>Table of Contents</h2>
+
+    <ol>
+        <li>Prerequisites</li>
+        <li>Installation Instructions</li>
+        <li>Connecting to Rets Rabbit</li>
+        <li>Servers</li>
+        <li>Metadata</li>
+        <li>Module Tags</li>
+        <li>Tips &amp; Troubleshooting</li>
+        <li>Support</li>
+        <li>Changelog</li>
+    </ol>
+
+
+    <hr />
+
+    <h2>1. Prerequisites</h2>
+
+    <p>Make sure your system meets the following requirements:</p>
+
+    <ul>
+        <li>PHP 5.4+</li>
+        <li>ExpressionEngine 3.0 or later</li>
+        <li>A Client ID &amp; Secret for the Rets Rabbit API (
+            <a href="http://retsrabbit.com">http://retsrabbit.com</a>) contact Patrick Pohler
+            <strong>
+                <a href="&#109;&#x61;&#x69;&#x6c;&#x74;&#111;&#58;&#99;&#111;&#x6e;&#116;&#97;&#99;&#116;&#x40;&#114;&#x65;&#x74;&#x73;&#x72;&#x61;&#x62;&#98;&#x69;&#x74;&#x2e;&#x63;&#111;&#109;">&#99;&#111;&#x6e;&#116;&#97;&#99;&#x74;&#64;&#x72;&#101;&#116;&#115;&#114;&#97;&#98;&#98;&#x69;&#116;&#x2e;&#x63;&#111;&#109;</a>
+            </strong>
+            for details</li>
+    </ul>
+
+
+    <hr />
+
+    <h2>2. Installation Instructions</h2>
+
+    <p>Copy the
+        <code>system/user/addons/rets_rabbit_v2</code> folder to
+        <code>system/user/addons/</code>
+    </p>
+
+    <p>Install the module by going to
+        <strong>Developer > Add-On Manager</strong>, look for Rets Rabbit V2 and click
+        <strong>Install</strong>
+    </p>
+
+    <p>That's it! Go to the Rets Rabbit module’s Control Panel (
+        <strong>Developer > Add-Ons > Modules > Rets Rabbit V2 > Settings</strong>) to finish setting up the module.</p>
+
+    <hr />
+
+    <h2>3. Connecting to Rets Rabbit</h2>
+
+    <p>To setup the module, you'll need to enter the Client ID &amp; Client Secret for your Rets Rabbit Account.</p>
+
+    <p>Once you enter your ID &amp; Secret and hit Submit you should be able to access the "Servers" and "Metadata" tabs.</p>
+
+    <p>After you hit submit, you MUST click on the
+        <strong>Servers</strong> tab, this will help you test your connection to Rets Rabbit, as well as prepare your installation
+        with the registered servers on your RR account.</p>
+
+    <p>The Servers and Metadata tabs both have a "Refresh from API" button to manually refresh the data from the Rets Rabbit
+        API.</p>
+
+    <hr />
+
+    <h2>4. Servers</h2>
+
+    <p>The Servers tab will help you manage the real estate servers your account has access to. Each account will have at least
+        one server. This tab will be populated automatically whenever you load the tab from the CP.</p>
+
+    <p>
+        <strong>Short Code:</strong> This field can set to help you pull lisiting from multiple servers easily. For example, if you
+        have a server you label as "new york" you'll just need to pass the parameter "short_code='new york' to the Rets Rabbit
+        EE tags.</p>
+
+    <p>
+        <strong>Server Hash:</strong> This is the unique id every real estate board's server has in the Rets Rabbit database. You
+        cannot change this value, however it is useful if you need to interact with the RR API directly. Otherwise you can
+        ignore this field.</p>
+
+    <p>
+        <strong>Default:</strong> This setting determines the default server if no "short_code" parameter is passed. If you have
+        multiple servers you can select any server listed as the default.</p>
+
+    <hr />
+
+    <h2>5. Metadata</h2>
+
+    <p>In order to work with Rets Rabbit, you need to know about the data being returned from the servers you're connecting
+        to. In order to help with this, you can use the Metadata tab.</p>
+
+    <p>Metadata consists of the following types of information:</p>
+
+    <p>
+        <strong>Resource:</strong> This defines the type of data to be returned. There are nine standard types, a RETS server may
+        return one or more of these types. The most common type is "Property"</p>
+
+    <p>
+        <strong>Class:</strong> A subtype of the data to be returned. Every Resource has at least one class, while some may return
+        more than one. For instance the Property resource may include separate classes for single-family homes, condos, or
+        commercial properties.</p>
+
+    <p>
+        <strong>Field:</strong> The data is organized into fields, each field contains a value that may correspond to an integer,
+        character or some other datatype.</p>
+
+    <p>
+        <strong>Object:</strong> A special datatype that contains binary data, usually Photos or attached documentation.</p>
+
+    <p>The Metadata tab provides a quick reference on the data being returned. It also organizes the metadata so you can quickly
+        reference the proper fields in your templates.</p>
+
+    <p>
+        <strong>Currently the Rets Rabbit API only pulls "Property" resource types, although the Metadata tab will show all resources
+            available from the local real estate board. If you need other resources imported from your real estate server,
+            please email
+            <a href="&#109;&#x61;&#x69;&#x6c;&#x74;&#111;&#58;&#x63;&#x6f;&#x6e;&#x74;&#97;&#x63;&#x74;&#64;&#97;&#x6e;&#x65;&#99;&#107;&#97;&#x2e;&#99;&#111;&#x6d;">&#99;&#x6f;&#x6e;&#x74;&#x61;&#x63;&#x74;&#64;&#97;&#x6e;&#x65;&#x63;&#x6b;&#97;&#46;&#99;&#111;&#109;</a> for
+            custom solution options.</strong>
+    </p>
+
+    <hr />
+
+    <h2>6. Module Tags</h2>
+
+    <h3>Displaying Listings/Properties</h3>
+
+    <p>The
+        <code>{exp:rets_rabbit:listings}</code> tagpair runs a query to display Property resource data.</p>
+
+    <p>
+        <strong>Example:</strong>
+    </p>
+
+    <pre><code>{exp:rets_rabbit:listings ListPrice="100000+"}
+    &lt;h1&gt;{mls_id} - {StreetNumber} {StreetName} {City}&lt;/h1&gt;
+    &lt;p&gt;
+        Price: {ListPrice} &lt;br/&gt;
+        Total Sq Feet: {SqFtTotal} &lt;br/&gt;
+        Bedrooms: {Beds}&lt;br/&gt;
+        Bathrooms: {Baths} / {BathsHalf} (Full/Half)&lt;br/&gt;
+        Lot Size (Sq ft): {SqFtLot} &lt;br/&gt;
+        School: {School}
+    &lt;/p&gt;
+{/exp:rets_rabbit:listings}
+</code></pre>
+
+    <p>The tagpair parses RETS data fields for the Property resource, it can also use any RETS field as part of the search query.
+        In the above example the listings tagpair will display a property matching the MLS number from the third url segment.
+        Be sure to check the Metadata CP tab for the fields specific to your particular RETS server.</p>
+
+    <p>The
+        <code>{exp:rets_rabbit:listings}</code> tagpair also takes the following additional paramters.</p>
+
+    <ul>
+        <li>
+            <strong>limit</strong> (default: 500): number of records to return</li>
+        <li>
+            <strong>offset</strong> (default: 1): used in conjunction with limit, you can manually paginate through the records returned
+            by the query (see
+            <em>Pagination</em> for more info)</li>
+        <li>
+            <strong>short_code</strong> (optional): if you have a server short code set in the Servers CP tab, you can use it here
+            to define the server you want to pull listings from (note the property fields vary from server to server). If
+            nothing is passed the default server is used.</li>
+        <li>
+            <strong>num_photos</strong> (default:
+            <code>-1</code>): the max number of photos for each listing. Default is
+            <code>-1</code> (all photos) while
+            <code>0</code> will display none</li>
+    </ul>
+
+
+    <h4>Multiple value search</h4>
+
+    <p>To search on multiple values, use the pipe ("|") delimiter to separate the values. The following example will match properties
+        that have a
+        <strong>bldgtype</strong> value of
+        <strong>HIRISE</strong> or
+        <strong>ELEVATOR</strong>.</p>
+
+    <pre><code>{exp:rets_rabbit:listings class="Coop" bldgtype="HIRISE|ELEVATOR" num_photos="1" limit="10"}
+...
+{/exp:rets_rabbit:listings}
+</code></pre>
+
+    <h4>Search on wildcard</h4>
+
+    <p>You can do wildcard or case insensitive searches by appending the following keywords to a field:</p>
+
+    <ul>
+        <li>
+            <code>:startswith</code> - Wildcard, matches "value%" this is case insensitive</li>
+        <li>
+            <code>:endswith</code> - Matches "%value" case insensitive</li>
+        <li>
+            <code>:indexof</code> - Matches "%value%", case insensitive</li>
+        <li>
+            <code>:nocase</code> - Not a wildcard, matches "value", it is case insensitive</li>
+    </ul>
+
+
+    <p>
+        <strong>Note:</strong> While all servers are different, every listing will have a
+        <code>mls_id</code> tag no matter what. This tag uniquely identifies the property for the particular real estate board and can be used
+        to quickly pull back a single listing (see below)</p>
+
+    <h3>Searching by numeric range</h3>
+
+    <p>You can also search numerical values by using a range. If you RETS server has a ListPrice field for properties you can
+        run the following searches:</p>
+
+    <h4>Listings under $50K</h4>
+
+    <p>For specifying a less than criteria, use a dash
+        <strong>
+            <code>-</code>
+        </strong> at the end of the value.</p>
+
+    <pre><code>{exp:rets_rabbit:listings ListPrice="50000-"}
+</code></pre>
+
+    <h4>Listings between $50K-$70K</h4>
+
+    <p>For specifying a range between two numeric values, use a dash
+        <strong>
+            <code>-</code>
+        </strong> between the values in the request.</p>
+
+    <pre><code>{exp:rets_rabbit:listings ListPrice="50000-70000"}
+</code></pre>
+
+    <h4>Listings over $70K</h4>
+
+    <p>For specifying a greater than numeric search, we pass a plus
+        <strong>
+            <code>+</code>
+        </strong> in the query.</p>
+
+    <pre><code>{exp:rets_rabbit:listings ListPrice="70000+"}
+</code></pre>
+
+    <h3>Searching by date</h3>
+
+    <p>Searching by a date is similar to a numeric search, except you'll append ":date" to the field.</p>
+
+    <pre><code>{exp:rets_rabbit:listings ListingDate:date="2015/01/01-2015/02/01"}
+</code></pre>
+
+    <h3>Displaying a single listing</h3>
+
+    <p>
+        <strong>Example:</strong>
+    </p>
+
+    <pre><code>{exp:rets_rabbit:listing mls_id="{segment_3}"}
+    {if no_results}
+         &lt;p&gt;No results&lt;/p&gt;
+         {if has_error}
+         &lt;p&gt;&lt;strong&gt;There was an error!&lt;/strong&gt;&lt;/p&gt;
+         {/if}
+    {/if}
+    &lt;h1&gt;{mls_id} - {StreetNumber} {StreetName} {City}&lt;/h1&gt;
+    &lt;p&gt;
+        Price: {ListPrice} &lt;br/&gt;
+        Total Sq Feet: {SqFtTotal} &lt;br/&gt;
+        Bedrooms: {Beds}&lt;br/&gt;
+        Bathrooms: {Baths} / {BathsHalf} (Full/Half)&lt;br/&gt;
+        Lot Size (Sq ft): {SqFtLot} &lt;br/&gt;
+        School: {School}
+    &lt;/p&gt;
+{/exp:rets_rabbit:listing}
+</code></pre>
+
+    <p>Single listings are displayed using the
+        <code>{exp:rets_rabbit_listing}</code> tagpair using the following parameters:</p>
+
+    <ul>
+        <li>
+            <strong>mls_id</strong> (required): the unique listing id of the property this is a Rets Rabbit field and does not change
+            from server to server</li>
+        <li>
+            <strong>short_code</strong> (optional): the server short code</li>
+        <li>
+            <strong>num_photos</strong> (default:
+            <code>-1</code>): the max number of photos for each listing. Default is
+            <code>-1</code> (all photos) while
+            <code>0</code> will display none</li>
+    </ul>
+
+
+    <h3>Displaying photos</h3>
+
+    <p>Photos can be displayed in templates using the
+        <code>{photos}…{/photos}</code> tagpair:</p>
+
+    <p>
+        <strong>Example:</strong>
+    </p>
+
+    <pre><code>{if has_photos}
+    {photos}
+        &lt;img id="photo_{photo_count}" src="{url}"&gt;
+    {/photos}
+{if:else}
+    No photos for this property!
+{/if&gt;
+</code></pre>
+
+    <p>The
+        <strong>url</strong> tag will output the URL for photo stored by Rets Rabbit.</p>
+
+    <p>Alternatively, if you've nested any rets rabbit tag in a channel entry or other add-on and
+        <code>{url}</code> isn't dispaying. You can use
+        <code>{retsrabbit:url}</code> to avoid conflicts w/ other ExpressionEngine tags.</p>
+
+    <p>The
+        <strong>photo_count</strong> tag can be used to keep track of the photo's position in the loop.</p>
+
+    <p>The conditional
+        <strong>has_photos</strong> can be used
+        <strong>outside</strong> of the photos tagpair to check if a property has photos.</p>
+
+    <h3>Displaying Open Houses</h3>
+
+    <p>Open Houses (if available) can be displayed in templates using the
+        <code>{open_houses}…{/open_houses}</code> tagpair:</p>
+
+    <p>
+        <strong>Example:</strong>
+    </p>
+
+    <pre><code>{if has_open_houses}
+    {open_houses}
+        {!-- fields for the open house, these may be different for your MLS --}
+        &lt;p&gt;Date: {date_act}&lt;br&gt;
+            From: {from_time}-{end_time}&lt;br&gt;
+            Remarks: {remarks}&lt;/p&gt;
+    {/open_houses}
+{if:else}
+    No Open Houses for this Property
+{/if&gt;
+</code></pre>
+
+    <h3>Open Houses Search</h3>
+
+    <p>In addition to displaying open houses for a listing. You can display Open Houses in a stand-alone tag.</p>
+
+    <pre><code>{exp:rets_rabbit:open_houses listing_key="..."}
+{!-- fields for the open house, these may be different for your MLS --}
+&lt;p&gt;Date: {date_act}&lt;br&gt;
+    From: {from_time}-{end_time}&lt;br&gt;
+    Remarks: {remarks}
+    Showing Listing {open_house_count} of {open_house_total}
+&lt;/p&gt;
+{/exp:rets_rabbit:open_houses}
+</code></pre>
+
+    <p>Just like listings, you can search on open houses by adding parameters to the tag. Use the Metadata tab to lookup the
+        fields for the MLS.</p>
+
+    <h3>Displaying other Resources</h3>
+
+    <p>For this version of Rets Rabbit we're focusing on displaying Property data only, if you require displaying other resource
+        types, please contact Anecka (
+        <strong>
+            <a href="&#x6d;&#x61;&#105;&#108;&#x74;&#111;&#58;&#x63;&#111;&#x6e;&#x74;&#97;&#x63;&#x74;&#x40;&#97;&#110;&#101;&#x63;&#107;&#x61;&#46;&#x63;&#111;&#x6d;">&#99;&#x6f;&#x6e;&#x74;&#x61;&#x63;&#116;&#64;&#x61;&#110;&#x65;&#x63;&#x6b;&#97;&#x2e;&#99;&#111;&#109;</a>
+        </strong>) for custom development options using RETS.</p>
+
+    <h3>Property Search Forms</h3>
+
+    <p>While the
+        <code>{exp:rets_rabbit:listings}</code> tags are great for running queries in your templates, there are times when you need to create a search form so your
+        users can run their own search queries.</p>
+
+    <h4>Building the search form</h4>
+
+    <p>Use the
+        <code>{exp:rets_rabbit:search}</code> tag to build the form:</p>
+
+    <h4>Tag Parameters</h4>
+    <ul>
+        <li>
+            limit:
+            <code>{string}</code> => Set the number of listings per page
+        </li>
+        <li>
+            count:
+            <code>{nocount|estimate}</code> => Set the counting strategy. Using "estimate" will greatly increase the speed of the search query but decrease
+            the total_records accuracy.
+        </li>
+        <li>
+            search_segment:
+            <code>{string}</code> => The url segment to look at for the search id.
+        </li>
+        <li>
+            short_code:
+            <code>{string}</code> => Specify which MLS you want to run the search against.
+        </li>
+        <li>
+            results_path:
+            <code>{string}</code> => Redirect path for search results.
+        </li>
+    </ul>
+
+    <p>
+        <strong>Example:</strong>
+    </p>
+
+    <pre><code>{exp:rets_rabbit:search limit="10" count="estimate" results_path="search/results"}
+    &lt;p&gt;Please search for MLS # or Address. Using both may not yield any results.&lt;/p&gt;
+    &lt;label for="rets:MLSNumber"&gt;Search by MLS number&lt;/label&gt; &lt;input type="text" id="rets:MLSNumber" class="mls" name="rets:MLSNumber"&gt;&lt;br&gt;
+    &lt;label for="rets:City"&gt;City&lt;/label&gt; &lt;input type="text" id="rets:City" class="address" name="rets:City"&gt;&lt;br&gt;
+    &lt;label for="rets:ListPrice"&gt;Price $&lt;/label&gt;
+      &lt;select name="rets:ListPrice"&gt;
+        &lt;option value="" selected="selected"&gt;Any&lt;/option&gt;
+        &lt;option value="100000-"&gt;Less than $100,000&lt;/option&gt;
+        &lt;option value="100000-150000"&gt;$100,000 - $150,000&lt;/option&gt;
+        &lt;option value="150000-200000"&gt;$150,000 - $2000,000&lt;/option&gt;
+        &lt;option value="200000-250000"&gt;$200,000 - $250,000&lt;/option&gt;
+        &lt;option value="250000-300000"&gt;$250,000 - $300,000&lt;/option&gt;
+        &lt;option value="300000-350000"&gt;$300,000 - $350,000&lt;/option&gt;
+        &lt;option value="350000-400000"&gt;$350,000 - $400,000&lt;/option&gt;
+        &lt;option value="400000-450000"&gt;$400,000 - $450,000&lt;/option&gt;
+        &lt;option value="450000-500000"&gt;$450,000 - $500,000&lt;/option&gt;
+        &lt;option value="500000+"&gt;$500,000 +&lt;/option&gt;
+      &lt;/select&gt;
+     &lt;label for="orderby"&gt;Order By&lt;/label&gt;
+    &lt;select id="orderby" name="orderby"&gt;
+        &lt;option value="" {if orderby == ""}selected="selected"{/if}&gt;No ordering&lt;/option&gt;
+        &lt;option value="Price" {if orderby == "Price"}selected="selected"{/if}&gt;Price&lt;option&gt;
+    &lt;/select&gt;
+
+    &lt;label for="sort_order"&gt;Sort order&lt;/label&gt;
+    &lt;select id="sort_order" name="sort_order"&gt;
+        &lt;option value="desc" {if sort_order == "desc"}selected="selected"{/if}&gt;Descending&lt;/option&gt;
+        &lt;option value="asc" {if sort_order == "asc"}selected="selected"{/if}&gt;Ascending&lt;/option&gt;
+    &lt;/select&gt;
+
+
+{/exp:rets_rabbit:search}
+</code></pre>
+
+    <p>The
+        <strong>search</strong> tagpair accepts all the parameters that
+        <strong>listings</strong> does in addition to
+        <strong>results_path</strong>. If
+        <strong>results_path</strong> isn't set then the form assumes the results will be displayed on the same page as the form.
+        To search on a RETS field, name your form field the same as the RETS field you which to query and prepend it with
+        "
+        <strong>rets:</strong>".</p>
+
+    <pre><code>&lt;input type="text" name="rets:City"&gt;
+</code></pre>
+
+    <h5>Combination searches</h5>
+
+    <p>Occasionally you'll want to search multiple fields for the same value. This can be useful to have a single search box
+        for Postal Code, City, MLS Number or Address.</p>
+
+    <p>To use this in the
+        <code>{exp:rets_rabbit:listings}</code> tag, simply separate the fields w/ the pipe character (
+        <strong>"|"</strong>).</p>
+
+    <pre><code>{exp:rets_rabbit:listings City|County|StreetName="ventura"}
+</code></pre>
+
+    <p>This type of search is by default case insenstive, you can also use the wildcard keyword suffix. The following example
+        will match any City, County, StreetName that begins with "vent"</p>
+
+    <pre><code>{exp:rets_rabbit:listings City|County|StreetName:startswith="vent"}
+</code></pre>
+
+    <p>You'll likely use this w/ the
+        <code>{exp:rets_rabbit:search}</code> tag to give the user a single input form that can search among a variety of fields.</p>
+
+    <pre><code>{exp:rets_rabbit:search}
+    ...
+    &lt;input type="text" name="rets:City::County::StreetName:startswith" placeholder="Search by City, County or Street Name"&gt;
+    ...
+{/exp:rets_rabbit:search}
+</code></pre>
+
+    <p>Notice that instead of the pipe delimter, we use two colons (
+        <strong>"::"</strong>), unfortunatley ExpressionEngine blocks form fields with a pipe character in the name. The functionality
+        should work the same and you can even append wildcart suffixes.</p>
+
+    <h4>Displaying the results</h4>
+
+    <p>To display the results, use the
+        <code>{exp:rets_rabbit:search_results}</code> tag in your result template:</p>
+
+    <p>
+        <strong>Example:</strong>
+    </p>
+
+    <pre><code>{exp:rets_rabbit:search_results}
+    &lt;p&gt;&lt;a href="{path='rets-test/details/{mls_id}'}"&gt;{mls_id}&lt;/a&gt; : {StreetNumber} {StreetName} {City} - {ListPrice}&lt;/p&gt;
+    &lt;p&gt;Sq Ft Total: {SqFtTotal}&lt;/p&gt;
+    &lt;p&gt;{Beds} Bed / {Baths} Bath&lt;/p&gt;
+    {if no_results}
+        &lt;p&gt;No results found!&lt;/p&gt;
+    {/if}
+    {paginate}
+        &lt;p&gt;Page {current_page} of {total_pages} pages {pagination_links}&lt;/p&gt;
+    {/paginate}
+{/exp:rets_rabbit:search_results}
+</code></pre>
+
+    <p>There's a parameter you'll want to be aware of, the search parameters are saved to the DB and pull back based off a number
+        in a URL segment when redirecting to the results template. So if your search results tag is in the
+        <code>search/results</code> group/template then after the search is run the path will look like
+        <code>search/results/&lt;search id&gt;</code>. By default the
+        <code>{exp:rets_rabbit:search_results}</code> tag will look at the third url segment for the search id, however you can set it yourself using the
+        <strong>search_segment</strong> parameter.</p>
+
+    <p>Finally you can limit the number of photos displayed in the search results per listing by using the
+        <strong>num_photos</strong> parameter.</p>
+
+    <h4>:not_empty conditional</h4>
+
+    <p>Sometimes you have to check if a field has a value and is not empty before you display it in your template. The
+        <strong>:not_empty</strong> conditional can be used on any field to determine if the field has a value.</p>
+
+    <p>
+        <strong>Example:</strong>
+    </p>
+
+    <pre><code>{if !"{ListPrice:not_empty}"}
+    {ListPrice}
+{if:else}
+    No price is listed for this property
+{/if}
+</code></pre>
+
+    <h3>Pagination</h3>
+
+    <p>Paginating through results in the
+        <code>{exp:rets_rabbit:listings}</code> and
+        <code>{exp:rets_rabbit:search_results}</code> tags can be accomplished with the
+        <code>{paginate}</code> tagpair which will generate links for paging through the search results.</p>
+
+    <p>
+        <strong>Example:</strong>
+    </p>
+
+    <pre><code>{exp:rets_rabbit:search_results}
+    ...
+    {paginate}
+        &lt;p&gt;Page {current_page} of {total_pages} pages {pagination_links}&lt;/p&gt;
+    {/paginate}
+    ...
+{/exp:rets_rabbit:search_results}
+</code></pre>
+
+    <p>Use the
+        <strong>limit</strong> parameter in the
+        <code>{exp:rets_rabbit:search}</code> tag to set the number of lisitngs to display per page.</p>
+
+    <h3>Sorting</h3>
+
+    <p>Ordering &amp; sorting in the
+        <code>{exp:rets_rabbit:search}</code> tag can be accomplished by the
+        <strong>orderby</strong> and
+        <strong>sort_order</strong> fields.</p>
+
+    <pre><code>{exp:rets_rabbit:search}
+    . . .
+    &lt;label for="orderby"&gt;Order By&lt;/label&gt;
+    &lt;select id="orderby" name="orderby"&gt;
+        &lt;option value="" {if orderby == ""}selected="selected"{/if}&gt;No ordering&lt;/option&gt;
+        &lt;option value="Price" {if orderby == "Price"}selected="selected"{/if}&gt;Price&lt;option&gt;
+    &lt;/select&gt;
+
+    &lt;label for="sort_order"&gt;Sort order&lt;/label&gt;
+    &lt;select id="sort_order" name="sort_order"&gt;
+        &lt;option value="desc" {if sort_order == "desc"}selected="selected"{/if}&gt;Descending&lt;/option&gt;
+        &lt;option value="asc" {if sort_order == "asc"}selected="selected"{/if}&gt;Ascending&lt;/option&gt;
+    &lt;/select&gt;
+
+    &lt;label for="sort_type"&gt;Sort option&lt;/label&gt;
+    &lt;input type="checkbox" id="sort_option" name="sort_option" value="numeric"&gt;Numeric
+    . . .
+{/exp:rets_rabbit:search}
+</code></pre>
+
+    <ul>
+        <li>
+            <strong>orderby</strong>: This sets the field to sort on</li>
+        <li>
+            <strong>sort_order</strong>: Use
+            <strong>"asc"</strong> for an ascending sort, and
+            <strong>"desc"</strong> for descending</li>
+        <li>
+            <strong>sort_option</strong>: Set this optional value to
+            <strong>"numeric"</strong> if you want to sort by a number (like Price). You can also specify
+            <strong>"date"</strong> to sort by the date</li>
+    </ul>
+
+
+    <p>The above parameters can be used also in the
+        <code>{exp:rets_rabbit:listings}</code> tag.</p>
+
+    <h3>No results</h3>
+
+    <p>You can use the
+        <strong>no_results</strong> conditional to display a message if there's no matching result.</p>
+
+    <pre><code>{if no_results}
+    &lt;p&gt;No results found!&lt;/p&gt;
+{/if}
+</code></pre>
+
+    <h3>Caching</h3>
+
+    <p>The
+        <code>listing</code>,
+        <code>listings</code>, and
+        <code>search_results</code> tags support caching of the results. You can enable caching by passing
+        <strong>cache='y'</strong> as a parameter to the three tags. The default duration is 3600 seconds (1 hour). You can increase
+        or decrease the time by adding the
+        <strong>cache_duration</strong> parameter.</p>
+
+    <pre><code>{exp:rets_rabbit:listings .... cache='y' cache_duration='50000'}
+...
+{/exp:rets_rabbit:listings}
+</code></pre>
+
+    <h3>Stripping out HTML tags</h3>
+
+    <p>Sometimes the data from a RETS server isn't clean, this could include HTML or other code that could mess up your templates.
+        Both the
+        <code>{exp:retsrabbit:search_results}</code> and
+        <code>{exp:retsrabbit:listings}</code> and
+        <code>{exp:retsrabbit:listing}</code> tags have a parameter called
+        <strong>strip_tags</strong>. When set to true, this will strip any HTML or PHP tags from the variables.</p>
+
+    <h3>Excluding listings from results</h3>
+
+    <p>You can pass either a pipe delimited list or single MLS # to exclude listings from search results using the
+        <code>exclude</code> parameter. This parameter can be used for
+        <code>listings</code> &amp;
+        <code>search_result</code> tags.</p>
+
+    <pre><code>{exp:rets_rabbit:listings listing_key="1234|5678|1111" exclude="1111"}
+...
+{/exp:rets_rabbit:listings}
+</code></pre>
+
+    <hr />
+
+    <h2>7. Tips &amp; Troubleshooting</h2>
+
+    <p>If you have any issues with listings, please check to see if you're using the right fields in your templates. You can
+        view the fields for your server in the Servers tab in the CP.</p>
+
+    <p>Finally if you have Template debugging turned on you can view the Rets Rabbit debugging results. Look for messages that
+        begin with "RETS:" in the debugging output.</p>
+
+    <p>
+        <strong>Beware of dashes/special characters</strong>
+    </p>
+
+    <p>Occasionally if you're searching for values w/ special characters such as dashes (-), you'll need to wrap your value
+        in single quotes.</p>
+
+    <p>So instead of this:</p>
+
+    <pre><code>{exp:rets_rabbit:listings County="South Maple-Vine"}
+</code></pre>
+
+    <p>You want to use this instead:</p>
+
+    <pre><code>{exp:rets_rabbit:listings County="'South Maple-Vine'"}
+</code></pre>
+
+    <p>You can switch on logging of search requests &amp; property look ups on your site to EE's developer log by going to the
+        <strong>Rets Rabbit Settings</strong> tab and setting
+        <strong>Log searches</strong> to
+        <strong>yes</strong>.</p>
+
+    <hr />
+
+    <h2>8. Support</h2>
+
+    <p>If you have any questions or issues, please contact us at
+        <strong>
+            <a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#111;&#x3a;&#99;&#x6f;&#x6e;&#x74;&#x61;&#99;&#x74;&#64;&#x61;&#110;&#x65;&#99;&#x6b;&#97;&#x2e;&#x63;&#x6f;&#x6d;">&#99;&#111;&#110;&#x74;&#97;&#99;&#116;&#x40;&#97;&#110;&#x65;&#99;&#x6b;&#x61;&#x2e;&#99;&#111;&#109;</a>
+        </strong>
+    </p>
+
+    <hr />
+
+    <h2>9. Changelog</h2>
+
+    <h4>2.1.4</h4>
+
+    <ul>
+        <li>
+            Added "count" parameter to the
+            <code>search</code> &amp;
+            <code>listings</code> tags.
+        </li>
+    </ul>
+
+    <h4>2.1.3</h4>
+
+    <ul>
+        <li>Fix issues w/ server name / access url</li>
+        <li>Fix open house</li>
+    </ul>
+
+
+    <h4>2.1.1</h4>
+
+    <ul>
+        <li>Add
+            <code>{open_house_count}</code> and
+            <code>{open_house_total}</code>, update example to show usage</li>
+        <li>Add
+            <code>exclude</code> as a parameter</li>
+        <li>Add ability to set a custom Rets Rabbit API endpoint in CP</li>
+    </ul>
+
+
+    <h4>2.1.0</h4>
+
+    <ul>
+        <li>Added Open House support</li>
+    </ul>
+
+
+    <h4>2.0.0</h4>
+
+    <ul>
+        <li>ExpressionEngine 3 support added</li>
+        <li>Revamped &amp; improved Metadata</li>
+    </ul>
+
+
+    <h4>1.3.4</h4>
+
+    <ul>
+        <li>add search audit &amp; logging</li>
+    </ul>
+
+
+    <h4>1.3.3</h4>
+
+    <ul>
+        <li>added better error handling for single listings &amp; search</li>
+        <li>added "no_results" conditional to the
+            <code>{exp:rets_rabbit:listing}</code> tag</li>
+    </ul>
+
+
+    <h4>1.3.2</h4>
+
+    <ul>
+        <li>add limit variable to search forms</li>
+    </ul>
+
+
+    <h4>1.3.1</h4>
+
+    <ul>
+        <li>add "absolute_results" and "limit" variables to all tags</li>
+    </ul>
+
+
+    <h4>1.3.0</h4>
+
+    <ul>
+        <li>Multiple fields can be searched on using the double colon "::" in the search_form tag or pipe "|" in the listings
+            tagpair</li>
+        <li>Got rid of EE &lt; 2.6 way of setting the page title. Rets Rabbit now needs a minimum of EE 2.6 to work.</li>
+    </ul>
+
+
+    <h4>1.2.6</h4>
+
+    <ul>
+        <li>add ":not_empty" conditional so users can check if a field has a value</li>
+        <li>add manual refresh to server &amp; metadata can be refreshed from the API</li>
+    </ul>
+
+
+    <h4>1.2.5</h4>
+
+    <ul>
+        <li>add better error messaging to the RR tags</li>
+    </ul>
+
+
+    <h4>1.2.4</h4>
+
+    <ul>
+        <li>fix bug where offset was being ignored in the listings parameters</li>
+    </ul>
+
+
+    <h4>1.2.3</h4>
+
+    <ul>
+        <li>various bug fixes, fix updater</li>
+    </ul>
+
+
+    <h4>1.2.0</h4>
+
+    <ul>
+        <li>add
+            <strong>strip_tags</strong> parameter</li>
+        <li>fix pagination issue, last page would not return results</li>
+        <li>fix issue in search_form tag, ensure values are blank if no search has been run</li>
+        <li>include
+            <code>{rets_class}</code> as a variable in all tags</li>
+        <li>rename {retsrabbit:url} to {retsrabbit:photo_url} to prevent collisions w/ other EE tags</li>
+    </ul>
+
+
+    <h4>1.1.0</h4>
+
+    <p>Add combination parameter, "|" to search on multiple values</p>
+
+    <h4>1.0.9</h4>
+
+    <p>Add prefix "retsrabbit:" to {url} in {photos}{/photos} tagpair</p>
+
+    <h4>1.0.8</h4>
+
+    <p>Ignore "parse_inward"</p>
+
+    <h4>1.0.7</h4>
+
+    <p>Add "sort_option" parameter</p>
+
+    <h4>1.0.6</h4>
+
+    <p>Fix offset bug</p>
+
+    <h4>1.0.5</h4>
+
+    <p>Added "cache" &amp; "cache_duration" to all tags</p>
+
+    <h4>1.0.4</h4>
+
+    <p>Added "has_photo" conditional</p>
+
+    <h4>1.0.2</h4>
+
+    <p>Fix duplicate pagination in search results (likely result of EE 2.9.2)</p>
+
+    <h4>1.0.1</h4>
+
+    <p>Fix php error on Metadata</p>
+
+    <h4>1.0.0 - Initial Release</h4>
+
+    <p>Initial Release of Rets Rabbit to users</p>
+</body>
+
+</html>
