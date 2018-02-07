@@ -37,6 +37,23 @@ class Rets_rabbit_server extends CI_Model
     }
 
     /**
+     * Get all servers
+     *
+     * @return array
+     */
+    public function all()
+    {
+        $query = ee()->db->select('*')->from('rets_rabbit_v2_servers')->get();
+        $data = array();
+
+        if($query->num_rows() > 0) {
+            $data = $query->result_array();
+        }
+
+        return $data;
+    }
+
+    /**
      * Fetch a single server by id
      *
      * @param  integer $id
