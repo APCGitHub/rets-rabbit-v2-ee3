@@ -29,6 +29,7 @@ class Rets_rabbit_v2_mcp
         $this->sidebar = ee('CP/Sidebar')->make();
         $home_nav = $this->sidebar->addHeader(lang('settings_short'), ee('CP/URL', 'addons/settings/rets_rabbit_v2'));
         $server_nav = $this->sidebar->addHeader(lang('server'), ee('CP/URL', 'addons/settings/rets_rabbit_v2/servers'));
+        $explore_nav = $this->sidebar->addHeader(lang('explore'), ee('CP/URL', 'addons/settings/rets_rabbit_v2/explore'));
 
         ee()->Rr_config->getBySiteId($this->siteId);
         ee()->Token->setApiService($this->apiService);
@@ -222,5 +223,66 @@ class Rets_rabbit_v2_mcp
 		ee()->session->set_flashdata('message_success', lang('config_form_success'));
 
 		ee()->functions->redirect(ee('CP/URL', 'addons/settings/rets_rabbit_v2'));
+    }
+
+    /**
+     * Show the explorer view
+     *
+     * @return array
+     */
+    public function explore()
+    {
+        ee()->cp->load_package_js('axios.min');
+        ee()->cp->load_package_js('vue.min');
+        ee()->cp->load_package_js('explorer');
+        ee()->load->model('Rets_rabbit_server', 'Rr_server');
+
+        $vars = array(
+            'servers' => ee()->Rr_server->all(),
+            'resource_url' => ee('CP/URL', 'addons/settings/rets_rabbit_v2/exploreGetListings')
+        );
+
+        return array(
+            'body' => ee()->load->view('explore', $vars, TRUE),
+            'breadcrumb' => array(
+                ee('CP/URL', 'addons/settings/rets_rabbit_v2')->compile() => lang('rets_rabbit_module_name')
+            ),
+            'heading' => lang('explore')
+        );
+    }
+
+    /**
+     * Get listings from the explorer
+     *
+     * @return mixed
+     */
+    public function exploreGetListings()
+    {
+        ee()->load->library('Properties_service', null, 'Rr_properties');
+        $filter = ee()->input->get('filter');
+        $skip = ee()->input->get('skip');
+
+        $params = array(
+            '$top' => '1'
+        );
+
+        if($filter) {
+            $params['$filter'] = $filter;
+        }
+
+        if($skip) {
+            $params['$skip'] = $skip;
+        }
+
+        $res = ee()->Rr_properties->search($params);
+        $listings = array();
+
+        if($res->didSucceed()) {
+            $listings = $res->getResponse()['value'];
+        }
+
+        ee()->output->set_header('Content-Type: application/json');
+        exit(json_encode($listings));
+        
     }
 }
