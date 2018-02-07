@@ -6,7 +6,7 @@ $lang = array(
     /*  Required for MODULES page
     /* ----------------------------------------*/
 
-    "rets_rabbit_module_name"			=>    "Rets Rabbit",
+    "rets_rabbit_module_name"			=>    "Rets Rabbit V2",
 
     "rets_rabbit_module_description" 	=>	   "RETS/MLS search add-on for ExpressionEngine, uses the Rets Rabbit API",
 
@@ -58,6 +58,8 @@ $lang = array(
     "refresh"                            =>    "Refresh from API",
 
     "log_searches"                       =>    "Log searches",
+
+    "explore"                            => "Explore",
 
     /* END */
     ''=>''
