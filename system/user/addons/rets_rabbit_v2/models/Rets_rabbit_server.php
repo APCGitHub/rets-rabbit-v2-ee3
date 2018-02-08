@@ -141,6 +141,19 @@ class Rets_rabbit_server extends CI_Model
     }
 
     /**
+     * Delete a server
+     *
+     * @param int $serverId
+     * @return int
+     */
+    public function delete($serverId)
+    {
+        ee()->db->delete('rets_rabbit_v2_servers', array('id' => $serverId));
+
+        return ee()->db->affected_rows();
+    }
+
+    /**
      * Update a server's short code
      * @param  int|string $id
      * @param  string $short_code
