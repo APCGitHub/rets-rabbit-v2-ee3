@@ -59,6 +59,7 @@
     <!-- Response View -->
     <div class="col-group" style="margin-top:20px">
         <div class="col w-16">
+            <div v-if="errors.listings" style="margin-bottom:10px">{{errors.listings}}</div>
             <pre>{{listingsDataRaw}}</pre>
         </div>
     </div>
