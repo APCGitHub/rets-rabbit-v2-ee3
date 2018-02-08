@@ -2,7 +2,10 @@ new Vue({
     data: function() {
         return {
             http: {
-                listings: false
+                listings: {
+                    active: false,
+                    id: null
+                }
             },
             servers: [],
             listingsData: [],
@@ -18,18 +21,28 @@ new Vue({
         this.servers = JSON.parse(this.$el.attributes['servers'].value || []);
 
         if(this.servers && this.servers.length) {
+            var defaultS = null;
+
+            // Set offsets to 0 for all servers
             this.servers = this.servers.map(function (s) {
                 s.offset = 0;
+                if(s.is_default) {
+                    defaultS = s.server_id;
+                }
 
                 return s;
             });
-            
-            this.getListingsData(this.servers[0].server_id);
+
+            if(defaultS) {
+                this.getListingsData(defaultS);
+            } else {
+                this.getListingsData(this.servers[0].server_id);
+            }
         }
     },
     methods: {
         getListingsData: function (serverId) {
-            if(this.http.listings)
+            if(this.http.listings.active)
                 return;
 
             var self = this;
@@ -38,7 +51,8 @@ new Vue({
             };
             var server = this.getServer(serverId);
 
-            this.http.listings = true;
+            this.http.listings.active = true;
+            this.http.listings.id = serverId;
             this.errors.listings = null;
             this.listingsData = null;
 
@@ -48,11 +62,13 @@ new Vue({
                 params: data
             }).then(function (res) {
                 self.listingsData = res.data[0];
-                self.http.listings = false;
+                self.http.listings.active = false;
+                self.http.listings.id = null;
 
                 self.incrementServerOffset(serverId);
             }).catch(function (res) {
-                self.http.listings = false;
+                self.http.listings.id = null;
+                self.http.listings.active = false;
             });
         },
         getServer: function (id) {
@@ -66,11 +82,11 @@ new Vue({
                 return null;
             }
         },
-        incrementServerOffset: function (id) {
+        incrementServerOffset: function (serverId) {
             let index = -1;
 
             for(var i = 0; i < this.servers.length; i++) {
-                if(this.servers[i].server_id === id) {
+                if(this.servers[i].server_id === serverId) {
                     index = i;
                     break;
                 }
@@ -79,6 +95,9 @@ new Vue({
             if(index > -1) {
                 this.servers[index].offset++;
             }
+        },
+        fetchingForServer: function (serverId) {
+            return this.http.listings.active && this.http.listings.id === serverId;
         }
     },
     computed: {
