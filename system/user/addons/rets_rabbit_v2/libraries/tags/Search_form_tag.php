@@ -10,8 +10,9 @@ class Search_form_tag extends Base_tag
      * @var array
      */
     protected $attrs = array(
-    	'short_code' => null,
-    	'results_path' => null,
+        'short_code'    => null,
+        'all'           => 'n',
+    	'results_path'  => null,
     );
 
     /**
