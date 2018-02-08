@@ -82,6 +82,27 @@ class Rets_rabbit_v2
             } else {
                 $params['$filter'] = "server_id eq $serverId";
             }
+        } else if (ee()->Tag->all != 'y' && ee()->Tag->all != 'yes') {
+            // If not fetching all then only get for the default server(s)
+            $defaultServers = ee()->Rr_server->getDefaultsForSiteId($this->siteId);
+
+            if(count($defaultServers)) {
+                $sq = "(";
+                $ors = array();
+
+                foreach($defaultServers as $s) {
+                    $ors[] = "server_id eq {$s->server_id}";
+                }
+
+                $sq .= implode(' or ', $ors);
+                $sq .= ")";
+                
+                if(isset($params['$filter']) && strlen($params['$filter'])) {
+                    $params['$filter'] .= " and $sq";
+                } else {
+                    $params['$filter'] = $sq;
+                }
+            }
         }
 
         //Generate cache key

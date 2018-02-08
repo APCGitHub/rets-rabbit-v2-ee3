@@ -19,6 +19,7 @@ class Properties_tag extends Base_tag
         'cache'         => null,
         'cache_duration'=> 3600,
         'strip_tags'    => false,
+        'all'           => 'n' // can be 'n'/'no' or 'y'/'yes'
     );
 
     /**

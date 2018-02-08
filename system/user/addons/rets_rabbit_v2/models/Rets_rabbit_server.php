@@ -94,6 +94,32 @@ class Rets_rabbit_server extends CI_Model
     }
 
     /**
+     * Fetch the default server for a siteId
+     *
+     * @param integer $siteId
+     * @return mixed
+     */
+    public function getDefaultsForSiteId($siteId = 0)
+    {
+        $query = ee()->db->get_where('rets_rabbit_v2_servers', 
+            array(
+                'site_id' => $siteId,
+                'is_default' => 1
+            )
+        );
+        $servers = array();
+
+        if($query->num_rows() > 0) {
+            foreach($query->result() as $row) {
+                $s = static::create($row);
+                $servers[] = $s;
+            }
+        }
+
+        return $servers;
+    }
+
+    /**
      * Get a server by short code
      * @param  string $siteId   
      * @param  string $shortCode
