@@ -61,12 +61,13 @@ new Vue({
             axios.get(this.url, {
                 params: data
             }).then(function (res) {
-                self.listingsData = res.data[0];
+                self.listingsData = res.data && res.data.length ? res.data[0] : [];
                 self.http.listings.active = false;
                 self.http.listings.id = null;
 
                 self.incrementServerOffset(serverId);
             }).catch(function (res) {
+                self.errors.listings = "An error occurred. Please try again.";
                 self.http.listings.id = null;
                 self.http.listings.active = false;
             });
