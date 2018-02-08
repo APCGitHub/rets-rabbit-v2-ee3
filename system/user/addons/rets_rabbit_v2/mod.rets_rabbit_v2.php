@@ -365,7 +365,7 @@ class Rets_rabbit_v2
             }
         }
 
-        //Render the view of the pagination failed for some reason
+        //Render the view if the pagination failed for some reason
         if(is_null($total) || !$total) {
             $cond['has_results'] = 'FALSE';
             $cond['has_error'] = 'TRUE';
@@ -381,7 +381,8 @@ class Rets_rabbit_v2
                 ->setConditionals($cond)
                 ->process($cond['has_results']);
         }
-
+        
+        // Build paginator
         if($pagination->paginate === TRUE) {
             //Build the pagination
             $pagination->build($total, ee()->Tag->per_page);
