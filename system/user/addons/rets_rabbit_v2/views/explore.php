@@ -50,14 +50,14 @@
         </div>
     </div>
 
-    <div class="col-group">
+    <div class="col-group" style="margin-top: 10px">
         <div class="col w-8">
             <input type="text" v-model="search" placeholder="Search fields...">
         </div>
     </div>
 
     <!-- Response View -->
-    <div class="col-group" style="margin-top:15px">
+    <div class="col-group" style="margin-top:20px">
         <div class="col w-16">
             <pre>{{listingsDataRaw}}</pre>
         </div>
