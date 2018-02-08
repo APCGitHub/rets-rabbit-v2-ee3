@@ -35,8 +35,8 @@
                 <tbody>
                     <tr v-for="s in servers">
                         <td>
-                            <button :disabled="http.listings" class="btn" @click="getListingsData(s.server_id)">
-                                <span v-if="!http.listings">Fetch</span>
+                            <button :disabled="fetchingForServer(s.server_id)" class="btn" @click="getListingsData(s.server_id)">
+                                <span v-if="!fetchingForServer(s.server_id)">Fetch</span>
                                 <span v-else>Fetching...</span>
                             </button>
                         </td>
