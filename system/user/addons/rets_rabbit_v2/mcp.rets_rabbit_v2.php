@@ -18,26 +18,32 @@ class Rets_rabbit_v2_mcp
         ee()->load->model('Rets_rabbit_config', 'Rr_config');
         ee()->load->library('Token_service', null, 'Token');
 
+        // Set up ee bridge and token fetcher blueprint
         $bridge = new EEBridge;
         $bridge->setTokenFetcher(function () {
             return ee()->Rr_cache->get('access_token', true);
         });
 
+        // Set up api service instance
         $this->apiService = new ApiService($bridge);
-        $this->siteId = ee()->config->item('site_id');
+        ee()->Token->setApiService($this->apiService);
 
+        // Fetch site id config
+        $this->siteId = ee()->config->item('site_id');
+        ee()->Rr_config->getBySiteId($this->siteId);
+
+        // Create sidebar
         $this->sidebar = ee('CP/Sidebar')->make();
         $home_nav = $this->sidebar->addHeader(lang('settings_short'), ee('CP/URL', 'addons/settings/rets_rabbit_v2'));
         $server_nav = $this->sidebar->addHeader(lang('server'), ee('CP/URL', 'addons/settings/rets_rabbit_v2/servers'));
         $explore_nav = $this->sidebar->addHeader(lang('explore'), ee('CP/URL', 'addons/settings/rets_rabbit_v2/explore'));
 
-        ee()->Rr_config->getBySiteId($this->siteId);
-        ee()->Token->setApiService($this->apiService);
-
+        // See if dev set custom endpoint for some reason
         if($customEndpoint = ee()->Rr_config->api_endpoint) {
             $this->apiService->overrideBaseApiEndpoint($customEndpoint);
         }
 
+        // Refreshtoken if not valid
         if(!ee()->Token->isValid()) {
             ee()->Token->refresh();
         }
@@ -45,6 +51,8 @@ class Rets_rabbit_v2_mcp
 
     /**
      * Display the settings for the plugin on the "home page".
+     * 
+     * These settings are per site.
      *
      * @return mixed
      */
@@ -91,6 +99,34 @@ class Rets_rabbit_v2_mcp
     }
 
     /**
+     * Save rets rabbit api config
+     *
+     * @return mixed
+     */
+    public function save_config()
+    {
+        $data = array();
+		$id = ee()->input->post('id');
+        $data['site_id'] = $this->siteId;
+		$data['client_id'] = ee()->input->post('client_id');
+		$data['client_secret'] = ee()->input->post('client_secret');
+        $data['api_endpoint'] = ee()->input->post('api_endpoint');
+        $data['log_searches'] = ee()->input->post('log_searches');
+
+		if(is_null($id) || empty($id))  {
+			ee()->Rr_config->insert($data);
+		} else {
+			ee()->Rr_config->update($data, $id);
+		}
+
+        ee()->Rr_cache->delete();
+
+		ee()->session->set_flashdata('message_success', lang('config_form_success'));
+
+		ee()->functions->redirect(ee('CP/URL', 'addons/settings/rets_rabbit_v2'));
+    }
+
+    /**
      * Show which Rets Rabbit servers are connected to this account.
      *
      * @return mixed
@@ -106,15 +142,19 @@ class Rets_rabbit_v2_mcp
         $resource = new ServersResource($this->apiService);
         $serversResponse = $resource->search();
         $servers = array();
+        $matchedServerIds = array();
+        // Get current servers for this siteId
         $eeServers = ee()->Rr_server->getBySiteId($this->siteId);
 
         if($serversResponse->didSucceed()) {
             $servers = $serversResponse->getResponse()['data'];
         }
-
+        
+        // Loop through rr account servers and do syncing and inserting
         foreach($servers as $index => $server) {
             $found = false;
-
+            
+            // See if we already have the rr account server stored locally
             foreach($eeServers as $eeS) {
                 if($eeS->server_id === $server['id']) {
                     $data = array(
@@ -125,12 +165,16 @@ class Rets_rabbit_v2_mcp
                         'is_default'    => $eeS->is_default
                     );
 
+                    // Mark this server as found
+                    $matchedServerIds[] = $eeS->id;
+
                     ee()->Rr_server->update($data, $eeS->id);
                     $found = true;
                     break;
                 }
             }
-
+            
+            // The account server wasn't found locally so save it
             if(!$found) {
                 $data = array(
                     'site_id'       => $this->siteId,
@@ -140,6 +184,13 @@ class Rets_rabbit_v2_mcp
                 );
 
                 ee()->Rr_server->insert($data);
+            }
+        }
+
+        // Remove servers this account does not have access to anymore
+        foreach($eeServers as $localS) {
+            if(!in_array($localS->id, $matchedServerIds)) {
+                ee()->Rr_server->delete($localS->id);
             }
         }
 
@@ -195,34 +246,6 @@ class Rets_rabbit_v2_mcp
         } else {
             ee()->functions->redirect(ee('CP/URL', 'addons/settings/rets_rabbit_v2'));
         }
-    }
-
-    /**
-     * Save a config
-     *
-     * @return mixed
-     */
-    public function save_config()
-    {
-        $data = array();
-		$id = ee()->input->post('id');
-        $data['site_id'] = $this->siteId;
-		$data['client_id'] = ee()->input->post('client_id');
-		$data['client_secret'] = ee()->input->post('client_secret');
-        $data['api_endpoint'] = ee()->input->post('api_endpoint');
-        $data['log_searches'] = ee()->input->post('log_searches');
-
-		if(is_null($id) || empty($id))  {
-			ee()->Rr_config->insert($data);
-		} else {
-			ee()->Rr_config->update($data, $id);
-		}
-
-        ee()->Rr_cache->delete();
-
-		ee()->session->set_flashdata('message_success', lang('config_form_success'));
-
-		ee()->functions->redirect(ee('CP/URL', 'addons/settings/rets_rabbit_v2'));
     }
 
     /**
