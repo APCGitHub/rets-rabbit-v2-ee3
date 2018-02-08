@@ -85,6 +85,8 @@ class Properties_service
 						ee()->logger->developer('Could not refresh the token during a search.');
 					}
 				}
+			} else {
+				ee()->logger->developer('An unknown error occurred trying to fetch properties.');
 			}
 		}
 
