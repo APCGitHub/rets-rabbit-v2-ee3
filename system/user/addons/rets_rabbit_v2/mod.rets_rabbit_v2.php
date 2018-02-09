@@ -235,6 +235,7 @@ class Rets_rabbit_v2
 
         $shortCode = ee()->TMPL->fetch_param("short_code", '');
         $resultsPath = ee()->TMPL->fetch_param('results_path', ee()->uri->uri_string());
+        $searchAll = ee()->TMPL->fetch_param('all', '');
         $actionUrl = ee()->functions->fetch_action_id(RETS_RABBIT_V2_NAME, 'run_search');
 
         $hiddenFields = array(
@@ -244,6 +245,10 @@ class Rets_rabbit_v2
 
         if($shortCode) {
             $hiddenFields['short_code'] = $shortCode;
+        }
+
+        if($searchAll) {
+            $hiddenFields['all'] = $searchAll;
         }
 
         $formAttrs = array(
@@ -284,8 +289,11 @@ class Rets_rabbit_v2
                 'site_id' => $this->siteId
             );
 
-            if(isset($_POST['short_code'])) {
+            // Check if doing a server scope by short code first
+            if(isset($_POST['short_code']) && $_POST['short_code']) {
                 $data['short_code'] = $_POST['short_code'];
+            } elseif(isset($_POST['all']) && $_POST['all']) {
+                $data['all'] = $_POST['all'];
             }
 
             ee()->Rets_rabbit_search->insert($data);

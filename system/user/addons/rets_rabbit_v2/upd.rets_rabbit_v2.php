@@ -160,6 +160,7 @@ class Rets_rabbit_v2_upd
             'searched_at'	 => array('type' => 'datetime', 'null' => true),
             'params'         => array('type' => 'text', 'null' => true),
             'short_code'     => array('type' => 'varchar', 'constraint' => '250', 'null' => TRUE),
+            'all_servers'    => array('type' => 'varchar', 'constraint' => '3', 'null' => TRUE),
         );
 
         ee()->dbforge->add_field($fields);

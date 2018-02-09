@@ -7,6 +7,7 @@ class Rets_rabbit_search extends CI_Model
     public $params;
     public $searched_at;
     public $short_code;
+    public $all_servers;
 
     /**
      * Fetch a search by id
@@ -84,7 +85,8 @@ class Rets_rabbit_search extends CI_Model
         $this->site_id = $data['site_id'];
         $this->params = json_encode($data['params']);
         $this->searched_at = $dt->format('Y-m-d H:i:s');
-        $this->short_code = $data['short_code'];
+        $this->short_code = isset($data['short_code']) ? $data['short_code'] : null;
+        $this->all_servers = isset($data['all']) ? $data['all'] : null;
     }
 
     /**
@@ -99,5 +101,6 @@ class Rets_rabbit_search extends CI_Model
         $this->params = json_decode($row->params, true);
         $this->searched_at = $row->searched_at;
         $this->short_code = $row->short_code;
+        $this->all_servers = $row->all_servers;
     }
 }
