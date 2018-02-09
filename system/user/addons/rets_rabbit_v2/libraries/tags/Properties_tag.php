@@ -16,9 +16,9 @@ class Properties_tag extends Base_tag
         'top'           => 500,
         'skip'          => null,
         'short_code'    => null,
-        'cache'         => null,
+        'cache'         => 'n', // can be 'n'/'no' or 'y'/'yes'
         'cache_duration'=> 3600,
-        'strip_tags'    => false,
+        'strip_tags'    => 'n', // can be 'n'/'no' or 'y'/'yes'
         'all'           => 'n' // can be 'n'/'no' or 'y'/'yes'
     );
 
@@ -47,9 +47,7 @@ class Properties_tag extends Base_tag
      *
      * @var array
      */
-    protected $casts = array(
-        'cache' => 'bool'
-    );
+    protected $casts = array();
 
     /**
      * Hide these from toArray which is used for building the query params

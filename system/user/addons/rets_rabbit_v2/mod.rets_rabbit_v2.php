@@ -116,7 +116,7 @@ class Rets_rabbit_v2
         );
 
         //See if we are caching
-        if(ee()->Tag->cache) {
+        if(ee()->Tag->cache == 'y' || ee()->Tag->cache == 'yes') {
             $data = ee()->Rr_cache->get($cacheKey);
         }
 
@@ -193,7 +193,7 @@ class Rets_rabbit_v2
         );
 
         //Check if caching results
-        if(ee()->Tag->cache) {
+        if(ee()->Tag->cache == 'y' || ee()->Tag->cache == 'yes') {
             $data = ee()->Rr_cache->get($cacheKey);
         }
 
@@ -427,7 +427,7 @@ class Rets_rabbit_v2
         }
 
         //Check if caching results
-        if(ee()->Tag->cache) {
+        if(ee()->Tag->cache == 'y' || ee()->Tag->cache == 'yes') {
             $data = ee()->Rr_cache->get($searchCacheKey);
         }
 

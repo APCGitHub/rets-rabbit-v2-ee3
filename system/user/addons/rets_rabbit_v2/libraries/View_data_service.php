@@ -54,9 +54,9 @@ class View_data_service
      *
      * @return $this
      */
-    public function stripTags($strip = true)
+    public function stripTags($strip = 'y')
     {
-        $this->stripTags = $strip;
+        $this->stripTags = ($strip == 'y' || $strip == 'yes');
 
         return $this;
     }
