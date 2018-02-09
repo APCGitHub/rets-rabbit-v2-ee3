@@ -117,7 +117,7 @@ new Vue({
 
                     // search matching keys
                     Object.keys(r).forEach(function (k) {
-                        if(k.toLowerCase().includes(self.search)) {
+                        if(k.toLowerCase().includes(self.search.toLowerCase())) {
                             keys.push(k);
                         }
                     });
