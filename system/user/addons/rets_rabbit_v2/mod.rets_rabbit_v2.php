@@ -310,7 +310,11 @@ class Rets_rabbit_v2
                     ee()->output->fatal_error('You must use :search_id: in your results path as the target search id token. You supplied the following token: ' . $match, 500);
                 }
             } else {
-               $resultsPath .= ee()->Rets_rabbit_search->id;
+                if(substr($resultsPath, -1) !== '/') {
+                    $resultsPath .= '/';
+                }
+
+                $resultsPath .= ee()->Rets_rabbit_search->id;
             }
             
             ee()->functions->redirect($resultsPath);
