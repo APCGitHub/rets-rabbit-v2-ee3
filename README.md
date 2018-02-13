@@ -216,7 +216,7 @@ While the `{exp:rets_rabbit_v2:properties}` tag is great for fetching properties
 
 **Method 1**
 
-In this example there is a special term in the `results_path` tag argument called `:search_id:`. If this module finds this term it will replace it with the id of the newly created search.
+In this example there is a special term in the `results_path` tag argument called `:search_id:`. If the module finds this term it will replace it with the id of the newly created search.
 
 ```
 {exp:rets_rabbit_v2:search_form
