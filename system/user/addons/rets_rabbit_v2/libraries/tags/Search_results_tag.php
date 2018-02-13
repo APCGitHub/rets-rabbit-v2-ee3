@@ -14,8 +14,8 @@ class Search_results_tag extends Base_tag
     	'select' 		=> null,
         'orderby'       => null,
         'per_page'      => 12,
-    	'cache'         => false,
-        'strip_tags'    => false,
+    	'cache'         => 'n',
+        'strip_tags'    => 'n',
         'cache_duration'=> 3600,
         'count'         => 'estimated'
     );
