@@ -86,7 +86,7 @@ The tagpair parses the Property resources returned by the API, which you can use
 - `top` - (optional) Number of records to return.
 - `select` - (optional) Specify which fields to return for each Property. Must be a comma separate list of fields.
 - `orderby` - (optional) Specify the field and direction to order the results by.
-- `filter` - (optional) Pass a Data Dictionary valid query string to filter the results. See the [RR Api docs](https://retsrabbit.com/docs) for more info
+- `filter` - (optional) Pass a Data Dictionary valid query string to filter the results. See the [Rets Rabbit API docs](https://retsrabbit.com/docs/v2) for more info
 - `short_code` - (optional) Specify a specific server to query against. Useful if you have more than one server on your account.
 - `cache` - (optional, default: no) Cache the results. Possible values: **y, yes, n, no**.
 - `cache_duration` - (optional, default: 60 minutes) Adjust cache duration in seconds.
