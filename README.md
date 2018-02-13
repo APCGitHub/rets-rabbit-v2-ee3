@@ -212,7 +212,7 @@ While the `{exp:rets_rabbit_v2:properties}` tag is great for fetching properties
 - `short_code` - (optional) Specify a specific server to query against. Useful if you have more than one server on your account.
 - `all` - (optional, default: no) Specify whether to query against all of your available servers or not. Ignored if `short_code` has been supplied.
 
-**`results_path`** - When processing the search form, this module will try to build the `results_path` using one of two ways. The first method is the most flexible and what we recommend you to use.
+**`results_path`** - When processing the search form, the search parameters are saved to the DB. The search results tag will try to find those search parameters based on the search id passed in from a url segment. With that information in mind, the module tries to build the results path in one of two ways. The first method is the most flexible and what we recommend you to use.
 
 **Method 1**
 
