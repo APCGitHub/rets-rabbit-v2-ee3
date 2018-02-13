@@ -372,3 +372,35 @@ This tag is used to display results from a search form.
 - `strip_tags` - (optional, default: no) Strip HTML tags from the results Possible values: **y, yes, n, no**.
 - `count` - (optional, default: estimated) Set the type of counting method to be used on the result set. Possible values: **estimated, exact**. `Estimated` counts will be returned much faster but will not be as accurate as `exact` counts.
 
+### Pagination
+
+Pagination through results in the `{exp:rets_rabbit_v2:search_results}` tag can be accomplished with the `{paginate}` tagpair which will generate links through the search results.
+
+**Note:** Currently, we don't have support for pagination in the `{exp:rets_rabbit_v2:properties}` tag, but will be adding it very soon.
+
+#### Example Usage
+
+```
+{exp:rets_rabbit_v2:search_results
+    select="ListingId, ListPrice, PublicRemarks, City, StateOrProvince"
+    orderby="ListPrice desc"
+    per_page="15"
+    search_id="{get:search}"
+}   
+    {paginate}
+        {pagination_links}
+            <ul class="pagination">
+                {first_page}
+                    <li><a href="{pagination_url}?search={get:search}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                {/first_page}
+                {page}
+                    <li{if current_page} class="active"{/if}><a href="{pagination_url}?search={get:search}">{pagination_page_number}</a></li>
+                {/page}
+                {last_page}
+                    <li><a href="{pagination_url}?search={get:search}" aria-label="Previous"><span aria-hidden="true">&raquo;</span></a></li>
+                {/last_page}
+            </ul>
+        {/pagination_links}
+    {/paginate}
+{/exp:rets_rabbit_v2:search_results}
+```
