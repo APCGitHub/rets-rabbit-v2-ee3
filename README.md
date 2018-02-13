@@ -106,14 +106,14 @@ Use this tag to fetch a single property resource by mls_id.
     select="ListingId, ListPrice, PublicRemarks, City, StateOrProvince"
 }
     <div class="row">
-        <div class="col-sm-8 col-sm-offset-2">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					{ListingId}
-				</div>
-				<div class="panel-body">
-					{PublicRemarks}
-				</div>
+         <div class="col-sm-8 col-sm-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {ListingId}
+                </div>
+                <div class="panel-body">
+                    {PublicRemarks}
+                </div>
 			</div>
         </div>
     </div>
