@@ -39,7 +39,7 @@ The Explore tab will give you a way to examine and search the fields returned by
 Once listing data is returned by the API, you can use the search input to query against the listing fields. The search is case insensitive and doesn't search the listing values, just the keys.
 
 # Module Tags
-### {exp:rets_rabbit_v2:properties}
+### `{exp:rets_rabbit_v2:properties}`
 
 The  tag runs a query against the API to return and display property resource data.
 
@@ -85,7 +85,156 @@ The tagpair parses the Property resources returned by the API, which you can use
 - `select` - Specify which fields to return for each Property. Must be a comma separate list of fields.
 - `orderby` - Specify the field and direction to order the results by.
 - `filter` - Pass a Data Dictionary valid query string to filter the results. See the [RR Api docs](https://retsrabbit.com/docs) for more info
-- `cache` - (Default no) Cache the results. Valid values: **y, yes, n, no**.
+- `short_code` - Specify a specific server to query against. Useful if you have more than one server on your account.
+- `cache` - (Default, no) Cache the results. Valid values: **y, yes, n, no**.
 - `cache_duration` - (Default 60 minutes) Adjust cache duration in seconds.
-- `strip_tags` - 
-- `all` - 
+- `strip_tags` - (Default, no) Strip HTML tags from the results.
+- `all` - (Default, no) Specify whether to query against all of your available servers or not. Ignored if `short_code` has been supplied
+
+### `{exp:rets_rabbit_v2:property}`
+
+Use this tag to fetch a single property resource by mls_id.
+
+#### Example Usage
+
+```
+{exp:rets_rabbit_v2:property
+    mls_id="{get:id}"
+    strip_tags="true"
+    select="ListingId, ListPrice, PublicRemarks, City, StateOrProvince"
+}
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					{ListingId}
+				</div>
+				<div class="panel-body">
+					{PublicRemarks}
+				</div>
+			</div>
+        </div>
+    </div>
+{/exp:rets_rabbit_v2:property}
+```
+
+#### Parameters
+
+- `mls_id` (required) - The id of the property resource you are trying to fetch.
+- `short_code` - Specify a specific server to query against. Useful if you have more than one server on your account.
+- `cache` - (Default, no) Cache the results. Valid values: **y, yes, n, no**.
+- `cache_duration` - (Default 60 minutes) Adjust cache duration in seconds.
+- `strip_tags` - (Default no) Strip HTML tags from the results.
+
+### `{exp:rets_rabbit_v2:search_form}`
+
+While the `{exp:rets_rabbit_v2:properties}` tag is great for fetching properties with static queries, sometimes you want to offer your users a search form where they can run their own searches.
+
+#### Example Usage
+
+```
+{exp:rets_rabbit_v2:search_form
+        form_id="search"
+        form_class=""
+        all="y"
+        results_path="/properties/results?search=:search_id:"
+    }
+        <div class="form-group">
+            <input type="text" name="rr:StateOrProvince/City/PostalCode-contains-" class="form-control" placeholder="State, City, Zip..." id="wildcard-search">
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-6">
+                    <select name="rr:ListPrice-ge-" id="min-price" class="form-control">
+                        <option value>-- Min Price --</option>
+                        <option value="10000">$10,000</option>
+                        <option value="30000">$30,000</option>
+                        <option value="50000">$50,000</option>
+                        <option value="70000">$70,000</option>
+                        <option value="90000">$90,000</option>
+                        <option value="110000">$110,000</option>
+                        <option value="150000">$150,000</option>
+                        <option value="200000">$200,000</option>
+                        <option value="250000">$250,000</option>
+                        <option value="300000">$300,000</option>
+                    </select>
+                </div>
+                <div class="col-sm-6">
+                    <select name="rr:ListPrice-le-" id="max-price" class="form-control">
+                        <option value>-- Max Price --</option>
+                        <option value="100000">$100,000</option>
+                        <option value="150000">$150,000</option>
+                        <option value="200000">$200,000</option>
+                        <option value="250000">$250,000</option>
+                        <option value="300000">$300,000</option>
+                        <option value="350000">$350,000</option>
+                        <option value="400000">$400,000</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-6">
+                    <select name="rr:BedroomsTotal-ge-" id="bedrooms" class="form-control">
+                        <option value>-- Bedrooms --</option>
+                        <option value="1">1+</option>
+                        <option value="2">2+</option>
+                        <option value="3">3+</option>
+                        <option value="4">4+</option>
+                        <option value="5">5+</option>
+                    </select>
+                </div>
+                <div class="col-sm-6">
+                    <select name="rr:BathroomsFull-ge-" id="bedrooms" class="form-control">
+                        <option value>-- Bathrooms --</option>
+                        <option value="1">1+</option>
+                        <option value="2">2+</option>
+                        <option value="3">3+</option>
+                        <option value="4">4+</option>
+                        <option value="5">5+</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Search</button>
+    {/exp:rets_rabbit_v2:search_form}
+```
+
+#### Parameters
+
+- `form_id` - Give your form an id.
+- `form_class` - Specify the class or classes for this form.
+- `short_code` - Specify a specific server to query against. Useful if you have more than one server on your account.
+- `all` - (Default, no) Specify whether to query against all of your available servers or not. Ignored if `short_code` has been supplied.
+- `results_path` - Specify the url to display the search results.
+
+**`results_path`** - When processing the search form, this module will try to build the `results_path` using in one of two ways. The first method is the most flexible and what we recommend you to use.
+
+**Method 1**
+
+In this example there is a special term in the `results_path` tag argument called `:search_id:`. If this module finds this term it will replace it with the id of the newly created search.
+
+```
+{exp:rets_rabbit_v2:search_form
+    form_id="search"
+    all="y"
+    results_path="/properties/results?search=:search_id:"
+}
+{/exp:rets_rabbit_v2:search_form}
+```
+
+**Method 2**
+
+In this example we just pass a simple string argument to the `results_path` tag argument. If the module can't find the `:search_id:` term, then it assumes this method is being used to set the results path. The module will take the supplied results path and append the new search id to it.
+
+```
+{exp:rets_rabbit_v2:search_form
+    form_id="search"
+    all="y"
+    results_path="/properties/results"
+}
+{/exp:rets_rabbit_v2:search_form}
+```
+
+### `{exp:rets_rabbit_v2:search_results}`
