@@ -89,7 +89,7 @@ The tagpair parses the Property resources returned by the API, which you can use
 - `filter` - (optional) Pass a Data Dictionary valid query string to filter the results. See the [Rets Rabbit API docs](https://retsrabbit.com/docs/v2) for more info
 - `short_code` - (optional) Specify a specific server to query against. Useful if you have more than one server on your account.
 - `cache` - (optional, default: no) Cache the results. Possible values: **y, yes, n, no**.
-- `cache_duration` - (optional, default: 60 minutes) Adjust cache duration in seconds.
+- `cache_duration` - (optional, default: 60 min) Adjust cache duration in seconds.
 - `strip_tags` - (optional, default: no) Strip HTML tags from the results Possible values: **y, yes, n, no**.
 - `all` - (optional, default: no) Specify whether to query against all of your available servers or not. Ignored if `short_code` has been supplied. Possible values: **y, yes, n, no**.
 
@@ -126,7 +126,7 @@ Use this tag to fetch a single property resource by mls_id.
 - `select` - (optional) Specifically request only a certain subset of available fields
 - `short_code` - (optional) Specify a specific server to query against. Useful if you have more than one server on your account.
 - `cache` - (optional, default: no) Cache the results. Valid values: **y, yes, n, no**.
-- `cache_duration` - (optional, default: 60 minutes) Adjust cache duration in seconds.
+- `cache_duration` - (optional, default: 60 min) Adjust cache duration in seconds.
 - `strip_tags` - (optional, default: no) Strip HTML tags from the results.
 
 ### `{exp:rets_rabbit_v2:search_form}`
@@ -363,12 +363,12 @@ This tag is used to display results from a search form.
 
 #### Parameters
 
-- `search_id` - (Required) Pass in 
-- `per_page` - Specify how many items per page
-- `select` - Specify which fields to return for each Property. Must be a comma separate list of fields.
-- `orderby` - Specify the field and direction to order the results by.
-- `cache` - (Default, no) Cache the results. Possible values: **y, yes, n, no**.
-- `cache_duration` - (Default 60 minutes) Adjust cache duration in seconds.
-- `strip_tags` - (Default, no) Strip HTML tags from the results Possible values: **y, yes, n, no**.
-- `count` - (Default, estimated) Set the type of counting method to be used on the result set. Possible values: **estimated, exact**. `Estimated` counts will be returned much faster but will not be as accurate as `exact` counts.
+- `search_id` - (required) Pass in 
+- `per_page` - (optional) Specify how many items per page
+- `select` - (optional) Specify which fields to return for each Property. Must be a comma separate list of fields.
+- `orderby` - (optional) Specify the field and direction to order the results by.
+- `cache` - (optional, default: no) Cache the results. Possible values: **y, yes, n, no**.
+- `cache_duration` - (optional, default: 60 min) Adjust cache duration in seconds.
+- `strip_tags` - (optional, default: no) Strip HTML tags from the results Possible values: **y, yes, n, no**.
+- `count` - (optional, default: estimated) Set the type of counting method to be used on the result set. Possible values: **estimated, exact**. `Estimated` counts will be returned much faster but will not be as accurate as `exact` counts.
 
