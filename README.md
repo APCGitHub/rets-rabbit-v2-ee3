@@ -83,15 +83,15 @@ The tagpair parses the Property resources returned by the API, which you can use
 
 #### Parameters
 
-- `top` - Number of records to return.
-- `select` - Specify which fields to return for each Property. Must be a comma separate list of fields.
-- `orderby` - Specify the field and direction to order the results by.
-- `filter` - Pass a Data Dictionary valid query string to filter the results. See the [RR Api docs](https://retsrabbit.com/docs) for more info
-- `short_code` - Specify a specific server to query against. Useful if you have more than one server on your account.
-- `cache` - (Default, no) Cache the results. Possible values: **y, yes, n, no**.
-- `cache_duration` - (Default 60 minutes) Adjust cache duration in seconds.
-- `strip_tags` - (Default, no) Strip HTML tags from the results Possible values: **y, yes, n, no**.
-- `all` - (Default, no) Specify whether to query against all of your available servers or not. Ignored if `short_code` has been supplied. Possible values: **y, yes, n, no**.
+- `top` - (optional) Number of records to return.
+- `select` - (optional) Specify which fields to return for each Property. Must be a comma separate list of fields.
+- `orderby` - (optional) Specify the field and direction to order the results by.
+- `filter` - (optional) Pass a Data Dictionary valid query string to filter the results. See the [RR Api docs](https://retsrabbit.com/docs) for more info
+- `short_code` - (optional) Specify a specific server to query against. Useful if you have more than one server on your account.
+- `cache` - (optional, default: no) Cache the results. Possible values: **y, yes, n, no**.
+- `cache_duration` - (optional, default: 60 minutes) Adjust cache duration in seconds.
+- `strip_tags` - (optional, default: no) Strip HTML tags from the results Possible values: **y, yes, n, no**.
+- `all` - (optional, default: no) Specify whether to query against all of your available servers or not. Ignored if `short_code` has been supplied. Possible values: **y, yes, n, no**.
 
 ### `{exp:rets_rabbit_v2:property}`
 
@@ -122,12 +122,12 @@ Use this tag to fetch a single property resource by mls_id.
 
 #### Parameters
 
-- `mls_id` (Required) - The id of the property resource you are trying to fetch.
-- `select` - Specifically request only a certain subset of available fields
-- `short_code` - Specify a specific server to query against. Useful if you have more than one server on your account.
-- `cache` - (Default, no) Cache the results. Valid values: **y, yes, n, no**.
-- `cache_duration` - (Default 60 minutes) Adjust cache duration in seconds.
-- `strip_tags` - (Default no) Strip HTML tags from the results.
+- `mls_id` - (required) The id of the property resource you are trying to fetch.
+- `select` - (optional) Specifically request only a certain subset of available fields
+- `short_code` - (optional) Specify a specific server to query against. Useful if you have more than one server on your account.
+- `cache` - (optional, default: no) Cache the results. Valid values: **y, yes, n, no**.
+- `cache_duration` - (optional, default: 60 minutes) Adjust cache duration in seconds.
+- `strip_tags` - (optional, default: no) Strip HTML tags from the results.
 
 ### `{exp:rets_rabbit_v2:search_form}`
 
@@ -206,11 +206,11 @@ While the `{exp:rets_rabbit_v2:properties}` tag is great for fetching properties
 
 #### Parameters
 
-- `form_id` - Give your form an id.
-- `form_class` - Specify the class or classes for this form.
-- `short_code` - Specify a specific server to query against. Useful if you have more than one server on your account.
-- `all` - (Default, no) Specify whether to query against all of your available servers or not. Ignored if `short_code` has been supplied.
-- `results_path` - Specify the url to display the search results.
+- `form_id` - (required) Give your form an id.
+- `results_path` - (required) Specify the url to display the search results.
+- `form_class` - (optional) Specify the class or classes for this form.
+- `short_code` - (optional) Specify a specific server to query against. Useful if you have more than one server on your account.
+- `all` - (optional, default: no) Specify whether to query against all of your available servers or not. Ignored if `short_code` has been supplied.
 
 **`results_path`** - When processing the search form, this module will try to build the `results_path` using in one of two ways. The first method is the most flexible and what we recommend you to use.
 
