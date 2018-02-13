@@ -13,9 +13,9 @@ class Property_tag extends Base_tag
         'select'        => null,
         'mls_id'        => null,
         'short_code'    => null,
-        'cache'         => null,
+        'cache'         => 'n',
         'cache_duration'=> 3600,
-        'strip_tags'    => false,
+        'strip_tags'    => 'n',
     );
 
     /**
@@ -46,10 +46,7 @@ class Property_tag extends Base_tag
      *
      * @var array
      */
-    protected $casts = array(
-        'cache'     => 'bool',
-        'strip_tags'=> 'bool'
-    );
+    protected $casts = array();
 
     /**
      * Rules for value setting
