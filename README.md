@@ -1,3 +1,5 @@
+# Rets Rabbit EE3/4 Plugin
+
 Make sure your system meets the following requirements:
 
 * PHP 5.4+
