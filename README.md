@@ -53,9 +53,9 @@ The  tag runs a query against the API to return and display property resource da
     select="ListingId, ListPrice, OriginalListPrice, City, StateOrProvince, PublicRemarks, photos"
     orderby="ListPrice desc"
     filter="ListPrice gt 250000 and ListPrice lt 255000"
-    cache="true"
+    cache="y"
     cache_duration="100"
-    strip_tags="true"
+    strip_tags="y"
     all="y"
 }
     <div class="col-sm-6 col-md-4">
@@ -88,10 +88,10 @@ The tagpair parses the Property resources returned by the API, which you can use
 - `orderby` - Specify the field and direction to order the results by.
 - `filter` - Pass a Data Dictionary valid query string to filter the results. See the [RR Api docs](https://retsrabbit.com/docs) for more info
 - `short_code` - Specify a specific server to query against. Useful if you have more than one server on your account.
-- `cache` - (Default, no) Cache the results. Valid values: **y, yes, n, no**.
+- `cache` - (Default, no) Cache the results. Possible values: **y, yes, n, no**.
 - `cache_duration` - (Default 60 minutes) Adjust cache duration in seconds.
-- `strip_tags` - (Default, no) Strip HTML tags from the results.
-- `all` - (Default, no) Specify whether to query against all of your available servers or not. Ignored if `short_code` has been supplied
+- `strip_tags` - (Default, no) Strip HTML tags from the results Possible values: **y, yes, n, no**.
+- `all` - (Default, no) Specify whether to query against all of your available servers or not. Ignored if `short_code` has been supplied. Possible values: **y, yes, n, no**.
 
 ### `{exp:rets_rabbit_v2:property}`
 
@@ -122,7 +122,8 @@ Use this tag to fetch a single property resource by mls_id.
 
 #### Parameters
 
-- `mls_id` (required) - The id of the property resource you are trying to fetch.
+- `mls_id` (Required) - The id of the property resource you are trying to fetch.
+- `select` - Specifically request only a certain subset of available fields
 - `short_code` - Specify a specific server to query against. Useful if you have more than one server on your account.
 - `cache` - (Default, no) Cache the results. Valid values: **y, yes, n, no**.
 - `cache_duration` - (Default 60 minutes) Adjust cache duration in seconds.
@@ -239,4 +240,135 @@ In this example we just pass a simple string argument to the `results_path` tag 
 {/exp:rets_rabbit_v2:search_form}
 ```
 
+#### Search Form DSL
+
+To give you as the developer the flexibility to craft search forms that cover a wide range of query types, we have provided a domain specific language to use inside the `{exp:rets_rabbit_v2:search_form}` tag. When writing your search form markup, you will enter the name of the property field you want to search against in the `name` attribute of your input. The name of the property field must be prefixed with `rr:` so that the module knows to parse it. The syntax specifically looks like the following:
+
+`<input name="rr:{fieldName1/fieldName2/fieldName3/fieldName{n}}-{operator}-" value="">`
+
+Because of how strictly EE scrubs form input names, we had to come up with the syntax you see above. In a CMS such as Craft, the same input field would look like the following:
+
+`<input name="rr:{fieldName1|fieldName2|fieldName3|fieldName{n}}({operator})" value="">`
+
+We feel that the above syntax is more elegant and easier to read, and so we've included it to help you get a better understanding of how to write your search form markup.
+
+These operators can be used when crafting your search form:
+
+1. eq
+2. lt
+3. gt
+4. le
+5. ge
+6. ne
+7. contains
+8. endswith
+9. starswith
+10. between
+
+There are three types of queries which make up the foundation for most queries you would need to prepare for in your search forms.
+
+1. Searching against multiple fields for a single value
+2. Searching against a single field for a single value
+3. Searching against a single field for multiple values
+
+**Multiple Fields / Single Value**
+
+`<input name="rr:StateOrProvince/PostalCode/City-eq-" value="columbus">`
+
+The above input will create an ODATA partial filter which looks like the following: 
+
+`(StateOrProvince eq 'columbus' or PostalCode eq 'columbus' or City eq 'columbus')`
+
+This type of input is particulary useful when you want to have a main search bar perhaps in the banner of your home page or at the top of a search form.
+
+**Single Field / Single Value**
+
+`<input name="rr:StateOrProvince" value="columbus">`
+
+The above input will generate the following ODATA partial filter:
+
+`StateOrProvince eq 'columbus'`
+
+**Single Field / Multiple Values**
+
+`<input name="rr:PostalCode-ge-[]" type="checkbox" value="">`
+
+If we had say, 5 checkboxes of which 3 were checked when the form was submitted, the following partial filter would be generated:
+
+`(PostalCode eq 'val1' or PostalCode eq 'val2' or PostalCode eq 'val3')`
+
 ### `{exp:rets_rabbit_v2:search_results}`
+
+This tag is used to display results from a search form.
+
+#### Example Usage
+
+```
+{exp:rets_rabbit_v2:search_results
+    select="ListingId, ListPrice, PublicRemarks, City, StateOrProvince"
+    orderby="ListPrice desc"
+    per_page="15"
+    search_id="{get:search}"
+}
+    {if no_results}
+        {if has_error}
+            <div class="col-sm-12">
+                <div class="alert alert-warning">
+                    <p>Unable to run your search</p>
+                </div>
+            </div>
+        {if:else}
+            <div class="col-sm-12">
+                <div class="alert alert-warning">
+                    <p>No results found for your search</p>
+                </div>
+            </div>
+        {/if}
+    {/if}
+
+        
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                MLS ID {ListingId}
+            </div>
+            <div class="panel-body">
+                <div>
+                    Price: {ListPrice}
+                </div>
+            </div>
+            <div class="panel-footer">
+                <a class="btn btn-info" href="/properties/details?id={ListingId}">Details</a>
+            </div>
+        </div>
+    </div>
+
+    {paginate}
+        {pagination_links}
+            <ul class="pagination">
+                {first_page}
+                    <li><a href="{pagination_url}?search={get:search}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                {/first_page}
+                {page}
+                    <li{if current_page} class="active"{/if}><a href="{pagination_url}?search={get:search}">{pagination_page_number}</a></li>
+                {/page}
+                {last_page}
+                    <li><a href="{pagination_url}?search={get:search}" aria-label="Previous"><span aria-hidden="true">&raquo;</span></a></li>
+                {/last_page}
+            </ul>
+        {/pagination_links}
+    {/paginate}
+{/exp:rets_rabbit_v2}
+```
+
+#### Parameters
+
+- `search_id` - (Required) Pass in 
+- `per_page` - Specify how many items per page
+- `select` - Specify which fields to return for each Property. Must be a comma separate list of fields.
+- `orderby` - Specify the field and direction to order the results by.
+- `cache` - (Default, no) Cache the results. Possible values: **y, yes, n, no**.
+- `cache_duration` - (Default 60 minutes) Adjust cache duration in seconds.
+- `strip_tags` - (Default, no) Strip HTML tags from the results Possible values: **y, yes, n, no**.
+- `count` - (Default, estimated) Set the type of counting method to be used on the result set. Possible values: **estimated, exact**. `Estimated` counts will be returned much faster but will not be as accurate as `exact` counts.
+
