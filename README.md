@@ -102,7 +102,7 @@ Use this tag to fetch a single property resource by mls_id.
 ```
 {exp:rets_rabbit_v2:property
     mls_id="{get:id}"
-    strip_tags="true"
+    strip_tags="y"
     select="ListingId, ListPrice, PublicRemarks, City, StateOrProvince"
 }
     <div class="row">
