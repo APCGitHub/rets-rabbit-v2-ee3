@@ -114,7 +114,7 @@ Use this tag to fetch a single property resource by mls_id.
                 <div class="panel-body">
                     {PublicRemarks}
                 </div>
-			</div>
+            </div>
         </div>
     </div>
 {/exp:rets_rabbit_v2:property}
