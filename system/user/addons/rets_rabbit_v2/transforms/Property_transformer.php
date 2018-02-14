@@ -24,6 +24,7 @@ class Property_transformer extends TransformerAbstract
     {
         $data = $listing;
         $data['has_photos'] = false;
+        $data['has_open_houses'] = false;
         $data['total_photos'] = 0;
 
         // Set photo booleans
@@ -33,6 +34,15 @@ class Property_transformer extends TransformerAbstract
             if($count) {
                 $data['has_photos'] = true;
                 $data['total_photos'] = $count;
+            }
+        }
+
+        // Set open house booleans
+        if(isset($data['listing']) && isset($data['listing']['open_houses'])) {
+            $count = sizeof($data['listing']['open_houses']);
+
+            if($count) {
+                $data['has_open_houses'] = true;
             }
         }
 
@@ -72,13 +82,17 @@ class Property_transformer extends TransformerAbstract
     public function includeOpenHouses($listing = array())
     {
         if(isset($listing['listing']) && isset($listing['listing']['open_houses'])) {
+            $total = sizeof($listing['listing']['open_houses']);
             $openHouses = array();
 
-            foreach($listing['listing']['open_houses'] as $oh) {
-                $openHouses[] = $oh;
+            foreach($listing['listing']['open_houses'] as $index => $oh) {
+                $blob = $oh;
+                $blob['open_house_count'] = ($index + 1);
+                $blob['open_house_total'] = $total;
+                $openHouses[] = $blob;
             }
 
-            return $this->collection($oh, new Open_house_transformer());
+            return $this->collection($openHouses, new Open_house_transformer());
         }
 
         return $this->null();
