@@ -404,3 +404,31 @@ Pagination through results in the `{exp:rets_rabbit_v2:search_results}` tag can 
     {/paginate}
 {/exp:rets_rabbit_v2:search_results}
 ```
+
+### Caching
+
+The `property`, `properties`, and `search_results` tags support caching of the results. You can enable caching by passing cache='y' as a parameter. The default duration is 3600 seconds (1 hour). You can increase or decrease the time by adding the `cache_duration` parameter.
+
+```
+{exp:rets_rabbit_v2:properties
+    cache="y"
+    cache_duration="43200"}
+    ...
+{/exp:rets_rabbit_v2:properties}
+```
+
+### HTML Tag Stripping
+
+Sometimes the data from a RETS server isn't clean, this could include HTML or other code that could mess up your templates. The `search_results`, `properties` and `property` tags have a parameter called `strip_tags`. When set to *y/yes*, this will strip any HTML or PHP tags from the variables.
+
+```
+{exp:rets_rabbit_v2:properties
+    strip_tags="y"}
+    ...
+{/exp:rets_rabbit_v2:properties}
+```
+
+# Changelog
+
+### 1.0.0
+- Initial release of Rets Rabbit for EE3 & EE4 to users.
