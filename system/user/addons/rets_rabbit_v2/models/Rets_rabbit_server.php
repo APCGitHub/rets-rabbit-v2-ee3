@@ -1,5 +1,6 @@
 <?php
 
+
 class Rets_rabbit_server extends CI_Model
 {
     public $id = 0;
