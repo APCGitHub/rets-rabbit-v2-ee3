@@ -2,8 +2,8 @@
 
 require_once PATH_THIRD . 'rets_rabbit_v2/vendor/autoload.php';
 
-use RetsRabbit\ApiService;
-use RetsRabbit\Bridges\EEBridge;
+use Anecka\RetsRabbit\Core\ApiService;
+use Anecka\RetsRabbit\Core\Bridges\EEBridge;
 use RetsRabbit\Resources\ServersResource;
 
 class Rets_rabbit_v2_mcp
