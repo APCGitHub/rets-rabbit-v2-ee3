@@ -4,7 +4,7 @@ require_once PATH_THIRD . "rets_rabbit_v2/vendor/autoload.php";
 
 use Anecka\RetsRabbit\Core\ApiService;
 use Anecka\RetsRabbit\Core\Bridges\EEBridge;
-use RetsRabbit\Resources\PropertiesResource;
+use Anecka\RetsRabbit\Core\Resources\PropertiesResource;
 
 class Properties_service
 {
