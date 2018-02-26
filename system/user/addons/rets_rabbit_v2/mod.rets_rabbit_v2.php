@@ -43,8 +43,8 @@ class Rets_rabbit_v2
     {
         //Load libs and models
         ee()->load->library('Rets_rabbit_cache', null, 'Rr_cache');
-        ee()->load->model('Rets_rabbit_config', 'Rr_config');
-        ee()->load->model('Rets_rabbit_server', 'Rr_server');
+        ee()->load->model('rets_rabbit_config', 'Rr_config');
+        ee()->load->model('rets_rabbit_server', 'Rr_server');
         ee()->load->library('Properties_service', null, 'Rr_properties');
 
         $this->fractal = new Manager();
@@ -277,7 +277,7 @@ class Rets_rabbit_v2
     {
         ee()->load->library('logger');
         ee()->load->library('Forms_service', null, 'Forms');
-        ee()->load->model('Rets_rabbit_search');
+        ee()->load->model('rets_rabbit_search');
 
         $params = array();
 
@@ -296,7 +296,7 @@ class Rets_rabbit_v2
                 $data['all'] = $_POST['all'];
             }
 
-            ee()->Rets_rabbit_search->insert($data);
+            ee()->rets_rabbit_search->insert($data);
 
             $resultsPath = $_POST['results_path'];
             preg_match_all("/:([^\)]*):/", $resultsPath, $matches);
@@ -305,7 +305,7 @@ class Rets_rabbit_v2
                 $match = trim($matches[0][0]);
 
                 if($match == ':search_id:') {
-                    $resultsPath = str_replace($matches[0][0], ee()->Rets_rabbit_search->id, $resultsPath);
+                    $resultsPath = str_replace($matches[0][0], ee()->rets_rabbit_search->id, $resultsPath);
                 } else {
                     ee()->output->fatal_error('You must use :search_id: in your results path as the target search id token. You supplied the following token: ' . $match, 500);
                 }
@@ -314,7 +314,7 @@ class Rets_rabbit_v2
                     $resultsPath .= '/';
                 }
 
-                $resultsPath .= ee()->Rets_rabbit_search->id;
+                $resultsPath .= ee()->rets_rabbit_search->id;
             }
             
             ee()->functions->redirect($resultsPath);
@@ -327,7 +327,7 @@ class Rets_rabbit_v2
     public function search_results()
     {
         ee()->load->library('pagination');
-        ee()->load->model('Rets_rabbit_search');
+        ee()->load->model('rets_rabbit_search');
         ee()->load->library('tags/Search_results_tag', null, 'Tag');
         ee()->load->library('View_data_service', null, 'View_service');
 
@@ -341,22 +341,22 @@ class Rets_rabbit_v2
         ee()->TMPL->tagdata = $pagination->prepare(ee()->TMPL->tagdata);
 
         //Fetch the search query from the DB
-        ee()->Rets_rabbit_search->get($searchId);
+        ee()->rets_rabbit_search->get($searchId);
 
-        if(!ee()->Rets_rabbit_search->id) {
+        if(!ee()->rets_rabbit_search->id) {
             ee()->output->fatal_error('We could not find a search.', 404);
         }
 
         //Search Params
-        $params = ee()->Rets_rabbit_search->params;
+        $params = ee()->rets_rabbit_search->params;
         $overrideParams = ee()->Tag->toApiParams();
         $params = array_merge($params, $overrideParams);
 
-        if(ee()->Rets_rabbit_search->short_code) {
-            $serverId = ee()->Rr_server->getByShortCode($this->siteId, ee()->Rets_rabbit_search->short_code);
+        if(ee()->rets_rabbit_search->short_code) {
+            $serverId = ee()->Rr_server->getByShortCode($this->siteId, ee()->rets_rabbit_search->short_code);
 
             if(!$serverId) {
-                ee()->output->fatal_error("Could not find a server having short code: " . ee()->Rets_rabbit_search->short_code, 404);
+                ee()->output->fatal_error("Could not find a server having short code: " . ee()->rets_rabbit_search->short_code, 404);
             }
 
             if(isset($params['$filter']) && strlen($params['$filter'])) {

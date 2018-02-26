@@ -15,7 +15,7 @@ class Rets_rabbit_v2_mcp
     public function __construct()
     {
         ee()->load->library('Rets_rabbit_cache', null, 'Rr_cache');
-        ee()->load->model('Rets_rabbit_config', 'Rr_config');
+        ee()->load->model('rets_rabbit_config', 'Rr_config');
         ee()->load->library('Token_service', null, 'Token');
 
         // Set up ee bridge and token fetcher blueprint
@@ -134,7 +134,7 @@ class Rets_rabbit_v2_mcp
     public function servers()
     {
         ee()->load->library('table');
-        ee()->load->model('Rets_rabbit_server', 'Rr_server');
+        ee()->load->model('rets_rabbit_server', 'Rr_server');
 
         $vars = array(
             'servers' => array()
@@ -213,7 +213,7 @@ class Rets_rabbit_v2_mcp
      */
     public function update_servers()
     {
-        ee()->load->model('Rets_rabbit_server', 'Rr_server');
+        ee()->load->model('rets_rabbit_server', 'Rr_server');
 
         $ids = ee()->input->post('id');
 		$shortcodes = ee()->input->post('short_code');
@@ -258,7 +258,7 @@ class Rets_rabbit_v2_mcp
         ee()->cp->load_package_js('axios.min');
         ee()->cp->load_package_js('vue.min');
         ee()->cp->load_package_js('explorer');
-        ee()->load->model('Rets_rabbit_server', 'Rr_server');
+        ee()->load->model('rets_rabbit_server', 'Rr_server');
 
         $vars = array(
             'servers' => ee()->Rr_server->all(),
