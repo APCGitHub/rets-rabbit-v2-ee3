@@ -2,7 +2,7 @@
 
 require PATH_THIRD . "rets_rabbit_v2/vendor/autoload.php";
 
-use RetsRabbit\Query\QueryParser;
+use Anecka\RetsRabbit\Core\Query\QueryParser;
 
 class Forms_service
 {
