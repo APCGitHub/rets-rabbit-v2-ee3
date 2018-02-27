@@ -14,9 +14,9 @@ class Rets_rabbit_v2_mcp
 
     public function __construct()
     {
-        ee()->load->library('Rets_rabbit_cache', null, 'Rr_cache');
-        ee()->load->model('rets_rabbit_config', 'Rr_config');
-        ee()->load->library('Token_service', null, 'Token');
+        ee()->load->library('Rr_v2_cache', null, 'Rr_cache');
+        ee()->load->model('rets_rabbit_v2_config', 'Rr_config');
+        ee()->load->library('Rr_v2_token_service', null, 'Token');
 
         // Set up ee bridge and token fetcher blueprint
         $bridge = new EEBridge;
@@ -134,7 +134,7 @@ class Rets_rabbit_v2_mcp
     public function servers()
     {
         ee()->load->library('table');
-        ee()->load->model('rets_rabbit_server', 'Rr_server');
+        ee()->load->model('rets_rabbit_v2_server', 'Rr_server');
 
         $vars = array(
             'servers' => array()
@@ -213,7 +213,7 @@ class Rets_rabbit_v2_mcp
      */
     public function update_servers()
     {
-        ee()->load->model('rets_rabbit_server', 'Rr_server');
+        ee()->load->model('rets_rabbit_v2_server', 'Rr_server');
 
         $ids = ee()->input->post('id');
 		$shortcodes = ee()->input->post('short_code');
@@ -258,7 +258,7 @@ class Rets_rabbit_v2_mcp
         ee()->cp->load_package_js('axios.min');
         ee()->cp->load_package_js('vue.min');
         ee()->cp->load_package_js('explorer');
-        ee()->load->model('rets_rabbit_server', 'Rr_server');
+        ee()->load->model('rets_rabbit_v2_server', 'Rr_server');
 
         $vars = array(
             'servers' => ee()->Rr_server->all(),
@@ -281,7 +281,7 @@ class Rets_rabbit_v2_mcp
      */
     public function exploreGetListings()
     {
-        ee()->load->library('Properties_service', null, 'Rr_properties');
+        ee()->load->library('Rr_v2_property_service', null, 'Rr_properties');
         $filter = ee()->input->get('filter');
         $skip = ee()->input->get('skip');
 

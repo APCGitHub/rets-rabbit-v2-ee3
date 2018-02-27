@@ -42,10 +42,10 @@ class Rets_rabbit_v2
     public function __construct()
     {
         //Load libs and models
-        ee()->load->library('Rets_rabbit_cache', null, 'Rr_cache');
-        ee()->load->model('rets_rabbit_config', 'Rr_config');
-        ee()->load->model('rets_rabbit_server', 'Rr_server');
-        ee()->load->library('Properties_service', null, 'Rr_properties');
+        ee()->load->library('Rr_v2_cache', null, 'Rr_cache');
+        ee()->load->model('rets_rabbit_v2_config', 'Rr_config');
+        ee()->load->model('rets_rabbit_v2_server', 'Rr_server');
+        ee()->load->library('Rr_v2_property_service', null, 'Rr_properties');
 
         $this->fractal = new Manager();
         $this->fractal->setSerializer(new Rets_rabbit_array_serializer);
@@ -60,8 +60,8 @@ class Rets_rabbit_v2
     public function properties()
     {
         //Load libs
-        ee()->load->library('tags/Properties_tag', null, 'Tag');
-        ee()->load->library('View_data_service', null, 'View_service');
+        ee()->load->library('tags/Rr_v2_properties_tag', null, 'Tag');
+        ee()->load->library('Rr_v2_view_data_service', null, 'View_service');
 
         //Parse template params
         ee()->Tag->parseParams();
@@ -158,8 +158,8 @@ class Rets_rabbit_v2
     public function property()
     {
         //Load libs
-        ee()->load->library('tags/Property_tag', null, 'Tag');
-        ee()->load->library('View_data_service', null, 'View_service');
+        ee()->load->library('tags/Rr_v2_property_tag', null, 'Tag');
+        ee()->load->library('Rr_v2_view_data_service', null, 'View_service');
 
         //Parse template params
         ee()->Tag->parseParams();
@@ -276,8 +276,8 @@ class Rets_rabbit_v2
     public function run_search()
     {
         ee()->load->library('logger');
-        ee()->load->library('Forms_service', null, 'Forms');
-        ee()->load->model('rets_rabbit_search');
+        ee()->load->library('Rr_v2_form_service', null, 'Forms');
+        ee()->load->model('rets_rabbit_v2_search', 'Rr_search');
 
         $params = array();
 
@@ -296,7 +296,7 @@ class Rets_rabbit_v2
                 $data['all'] = $_POST['all'];
             }
 
-            ee()->rets_rabbit_search->insert($data);
+            ee()->Rr_search->insert($data);
 
             $resultsPath = $_POST['results_path'];
             preg_match_all("/:([^\)]*):/", $resultsPath, $matches);
@@ -305,7 +305,7 @@ class Rets_rabbit_v2
                 $match = trim($matches[0][0]);
 
                 if($match == ':search_id:') {
-                    $resultsPath = str_replace($matches[0][0], ee()->rets_rabbit_search->id, $resultsPath);
+                    $resultsPath = str_replace($matches[0][0], ee()->Rr_search->id, $resultsPath);
                 } else {
                     ee()->output->fatal_error('You must use :search_id: in your results path as the target search id token. You supplied the following token: ' . $match, 500);
                 }
@@ -327,9 +327,9 @@ class Rets_rabbit_v2
     public function search_results()
     {
         ee()->load->library('pagination');
-        ee()->load->model('rets_rabbit_search');
-        ee()->load->library('tags/Search_results_tag', null, 'Tag');
-        ee()->load->library('View_data_service', null, 'View_service');
+        ee()->load->library('tags/Rr_v2_search_results_tag', null, 'Tag');
+        ee()->load->library('Rr_v2_view_data_service', null, 'View_service');
+        ee()->load->model('rets_rabbit_v2_search', 'Rr_search');
 
         //Parse template params
         ee()->Tag->parseParams();
@@ -341,22 +341,22 @@ class Rets_rabbit_v2
         ee()->TMPL->tagdata = $pagination->prepare(ee()->TMPL->tagdata);
 
         //Fetch the search query from the DB
-        ee()->rets_rabbit_search->get($searchId);
+        ee()->Rr_search->get($searchId);
 
-        if(!ee()->rets_rabbit_search->id) {
+        if(!ee()->Rr_search->id) {
             ee()->output->fatal_error('We could not find a search.', 404);
         }
 
         //Search Params
-        $params = ee()->rets_rabbit_search->params;
+        $params = ee()->Rr_search->params;
         $overrideParams = ee()->Tag->toApiParams();
         $params = array_merge($params, $overrideParams);
 
-        if(ee()->rets_rabbit_search->short_code) {
-            $serverId = ee()->Rr_server->getByShortCode($this->siteId, ee()->rets_rabbit_search->short_code);
+        if(ee()->Rr_search->short_code) {
+            $serverId = ee()->Rr_server->getByShortCode($this->siteId, ee()->Rr_search->short_code);
 
             if(!$serverId) {
-                ee()->output->fatal_error("Could not find a server having short code: " . ee()->rets_rabbit_search->short_code, 404);
+                ee()->output->fatal_error("Could not find a server having short code: " . ee()->Rr_search->short_code, 404);
             }
 
             if(isset($params['$filter']) && strlen($params['$filter'])) {
