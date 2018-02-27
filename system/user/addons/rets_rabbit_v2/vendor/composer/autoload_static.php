@@ -33,7 +33,7 @@ class ComposerStaticInitb8c0883fb6e6d0fd891337d101d42466
         ),
         'A' => 
         array (
-            'Anecka\\RetsRabbit\\Transformers\\' => 31,
+            'Anecka\\RetsRabbit\\Transforms\\' => 29,
             'Anecka\\RetsRabbit\\Serializers\\' => 30,
             'Anecka\\RetsRabbit\\Core\\' => 23,
         ),
@@ -64,7 +64,7 @@ class ComposerStaticInitb8c0883fb6e6d0fd891337d101d42466
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
-        'Anecka\\RetsRabbit\\Transformers\\' => 
+        'Anecka\\RetsRabbit\\Transforms\\' => 
         array (
             0 => __DIR__ . '/../..' . '/transforms',
         ),
@@ -95,6 +95,9 @@ class ComposerStaticInitb8c0883fb6e6d0fd891337d101d42466
         'Anecka\\RetsRabbit\\Core\\Resources\\aResource' => __DIR__ . '/..' . '/rets-rabbit/cms-plugin-core/src/Resources/aResource.php',
         'Anecka\\RetsRabbit\\Core\\Resources\\iResource' => __DIR__ . '/..' . '/rets-rabbit/cms-plugin-core/src/Resources/iResource.php',
         'Anecka\\RetsRabbit\\Serializers\\Rets_rabbit_array_serializer' => __DIR__ . '/../..' . '/serializers/Rets_rabbit_array_serializer.php',
+        'Anecka\\RetsRabbit\\Transforms\\Open_house_transformer' => __DIR__ . '/../..' . '/transforms/Open_house_transformer.php',
+        'Anecka\\RetsRabbit\\Transforms\\Photo_transformer' => __DIR__ . '/../..' . '/transforms/Photo_transformer.php',
+        'Anecka\\RetsRabbit\\Transforms\\Property_transformer' => __DIR__ . '/../..' . '/transforms/Property_transformer.php',
         'GuzzleHttp\\Client' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Client.php',
         'GuzzleHttp\\ClientInterface' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/ClientInterface.php',
         'GuzzleHttp\\Cookie\\CookieJar' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Cookie/CookieJar.php',
