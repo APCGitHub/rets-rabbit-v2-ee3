@@ -1,7 +1,7 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 
-class Rets_rabbit_server extends CI_Model
+class Rets_rabbit_v2_server extends CI_Model
 {
     public $id = 0;
     public $site_id = null;

@@ -1,6 +1,6 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class View_data_service
+class Rr_v2_view_data_service
 {
     /**
      * Data variables

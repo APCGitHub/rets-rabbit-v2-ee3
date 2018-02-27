@@ -1,6 +1,6 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Rets_rabbit_cache
+class Rr_v2_cache
 {
     /**
      * Base path for all cache.

@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 require_once PATH_THIRD . "rets_rabbit_v2/vendor/autoload.php";
 
@@ -6,7 +6,7 @@ use Anecka\RetsRabbit\Core\ApiService;
 use Anecka\RetsRabbit\Core\Bridges\EEBridge;
 use Anecka\RetsRabbit\Core\Resources\PropertiesResource;
 
-class Properties_service
+class Rr_v2_property_service
 {
 	/**
 	 * The api service from the core RR library
@@ -27,10 +27,10 @@ class Properties_service
 	 */
 	public function __construct()
 	{
-		ee()->load->library('Rets_rabbit_cache', null, 'Rr_cache');
-        ee()->load->model('Rets_rabbit_config', 'Rr_config');
-        ee()->load->model('Rets_rabbit_server', 'Rr_server');
-        ee()->load->library('Token_service', null, 'Token');
+		ee()->load->library('Rr_v2_cache', null, 'Rr_cache');
+        ee()->load->model('rets_rabbit_v2_config', 'Rr_config');
+        ee()->load->model('Rets_rabbit_v2_server', 'Rr_server');
+        ee()->load->library('Rr_v2_token_service', null, 'Token');
         ee()->load->library('logger');
 
 		$bridge = new EEBridge;

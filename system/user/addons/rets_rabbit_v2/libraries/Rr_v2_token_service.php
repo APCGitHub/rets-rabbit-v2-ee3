@@ -1,6 +1,6 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Token_service
+class Rr_v2_token_service
 {
     /**
      * Optional token
@@ -21,8 +21,8 @@ class Token_service
      */
     public function __construct()
     {
-        ee()->load->model('Rets_rabbit_config', 'Rr_config');
-        ee()->load->library('Rets_rabbit_cache', null, 'Rr_cache');
+        ee()->load->model('rets_rabbit_v2_config', 'Rr_config');
+        ee()->load->library('Rr_v2_cache', null, 'Rr_cache');
     }
 
     /**
