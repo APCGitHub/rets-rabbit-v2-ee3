@@ -430,5 +430,9 @@ Sometimes the data from a RETS server isn't clean, this could include HTML or ot
 
 # Changelog
 
+### 1.0.1
+- Fixed possible class name collisions in models and libraries
+- Fixed namespacing spelling
+
 ### 1.0.0
 - Initial release of Rets Rabbit for EE3 & EE4 to users.
