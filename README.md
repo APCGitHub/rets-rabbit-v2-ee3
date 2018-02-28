@@ -430,6 +430,9 @@ Sometimes the data from a RETS server isn't clean, this could include HTML or ot
 
 # Changelog
 
+### 1.0.2
+- Update library aliases to be more unique
+
 ### 1.0.1
 - Fixed possible class name collisions in models and libraries
 - Fixed namespacing spelling
