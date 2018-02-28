@@ -30,7 +30,7 @@ class Rr_v2_property_service
 		ee()->load->library('Rr_v2_cache', null, 'Rr_cache');
         ee()->load->model('rets_rabbit_v2_config', 'Rr_config');
         ee()->load->model('Rets_rabbit_v2_server', 'Rr_server');
-        ee()->load->library('Rr_v2_token_service', null, 'Token');
+        ee()->load->library('Rr_v2_token_service', null, 'Rr_token');
         ee()->load->library('logger');
 
 		$bridge = new EEBridge;
@@ -45,15 +45,15 @@ class Rr_v2_property_service
         $this->siteId = ee()->config->item('site_id');
 
         ee()->Rr_config->getBySiteId($this->siteId);
-        ee()->Token->setApiService($this->apiService);
+        ee()->Rr_token->setApiService($this->apiService);
 
 		//Allow developer to override base endpoint
 		if($customEndpoint = ee()->Rr_config->api_endpoint) {
             $this->apiService->overrideBaseApiEndpoint($customEndpoint);
         }
 
-        if(!ee()->Token->isValid()) {
-            ee()->Token->refresh();
+        if(!ee()->Rr_token->isValid()) {
+            ee()->Rr_token->refresh();
         }
 
 		//Instantiate the PropertiesResource
@@ -77,7 +77,7 @@ class Rr_v2_property_service
 				$code = $contents['error']['code'];
 
 				if($code == 'permission') {
-					$success = ee()->Token->refresh();
+					$success = ee()->Rr_token->refresh();
 
 					if(!is_null($success)) {
 						$res = $this->resource->search($params);
@@ -110,7 +110,7 @@ class Rr_v2_property_service
 				$code = $contents['error']['code'];
 
 				if($code == 'permission') {
-					$success = ee()->Token->refresh();
+					$success = ee()->Rr_token->refresh();
 
 					if(!is_null($success)) {
 						$res = $this->resource->single($id, $params);

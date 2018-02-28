@@ -16,7 +16,7 @@ class Rets_rabbit_v2_mcp
     {
         ee()->load->library('Rr_v2_cache', null, 'Rr_cache');
         ee()->load->model('rets_rabbit_v2_config', 'Rr_config');
-        ee()->load->library('Rr_v2_token_service', null, 'Token');
+        ee()->load->library('Rr_v2_token_service', null, 'Rr_token');
 
         // Set up ee bridge and token fetcher blueprint
         $bridge = new EEBridge;
@@ -26,7 +26,7 @@ class Rets_rabbit_v2_mcp
 
         // Set up api service instance
         $this->apiService = new ApiService($bridge);
-        ee()->Token->setApiService($this->apiService);
+        ee()->Rr_token->setApiService($this->apiService);
 
         // Fetch site id config
         $this->siteId = ee()->config->item('site_id');
@@ -44,8 +44,8 @@ class Rets_rabbit_v2_mcp
         }
 
         // Refreshtoken if not valid
-        if(!ee()->Token->isValid()) {
-            ee()->Token->refresh();
+        if(!ee()->Rr_token->isValid()) {
+            ee()->Rr_token->refresh();
         }
     }
 
