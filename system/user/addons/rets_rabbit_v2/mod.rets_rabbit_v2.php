@@ -43,9 +43,10 @@ class Rets_rabbit_v2
     {
         //Load libs and models
         ee()->load->library('Rr_v2_cache', null, 'Rr_cache');
+        ee()->load->library('Rr_v2_property_service', null, 'Rr_properties');
         ee()->load->model('rets_rabbit_v2_config', 'Rr_config');
         ee()->load->model('rets_rabbit_v2_server', 'Rr_server');
-        ee()->load->library('Rr_v2_property_service', null, 'Rr_properties');
+        ee()->load->model('rets_rabbit_v2_search', 'Rr_search');
 
         $this->fractal = new Manager();
         $this->fractal->setSerializer(new Rets_rabbit_array_serializer);
@@ -59,22 +60,21 @@ class Rets_rabbit_v2
      */
     public function properties()
     {
-        //Load libs
-        ee()->load->library('tags/Rr_v2_properties_tag', null, 'Rr_tag');
-        ee()->load->library('Rr_v2_view_data_service', null, 'Rr_view');
+        ee()->load->library('tags/Rr_v2_properties_tag', null, 'Rr_properties_tag');
+        ee()->load->library('Rr_v2_view_data_service', null, 'Rr_properties_view');
 
         //Parse template params
-        ee()->Rr_tag->parseParams();
+        ee()->Rr_properties_tag->parseParams();
 
         //Convert params to search terms
-        $params = ee()->Rr_tag->toApiParams();
+        $params = ee()->Rr_properties_tag->toApiParams();
 
         //See if short code supplied
-        if(ee()->Rr_tag->short_code) {
-            $serverId = ee()->Rr_server->getByShortCode($this->siteId, ee()->Rr_tag->short_code);
+        if(ee()->Rr_properties_tag->short_code) {
+            $serverId = ee()->Rr_server->getByShortCode($this->siteId, ee()->Rr_properties_tag->short_code);
 
             if(!$serverId) {
-                ee()->output->fatal_error("Could not find a server having short code: " . ee()->Rr_tag->short_code, 404);
+                ee()->output->fatal_error("Could not find a server having short code: " . ee()->Rr_properties_tag->short_code, 404);
             }
 
             if(isset($params['$filter']) && strlen($params['$filter'])) {
@@ -82,7 +82,7 @@ class Rets_rabbit_v2
             } else {
                 $params['$filter'] = "server_id eq $serverId";
             }
-        } else if (ee()->Rr_tag->all != 'y' && ee()->Rr_tag->all != 'yes') {
+        } else if (ee()->Rr_properties_tag->all != 'y' && ee()->Rr_properties_tag->all != 'yes') {
             // If not fetching all then only get for the default server(s)
             $defaultServers = ee()->Rr_server->getDefaultsForSiteId($this->siteId);
 
@@ -105,6 +105,17 @@ class Rets_rabbit_v2
             }
         }
 
+        $_params = array();
+
+        //Remove params with empty values
+        foreach($params as $k => $v) {
+            if(!empty($v) && !is_null($v)) {
+                $_params[$k] = $v;
+            }
+        }
+
+        $params = $_params;
+
         //Generate cache key
         $cacheKey = hash('sha256', serialize($params));
 
@@ -116,7 +127,7 @@ class Rets_rabbit_v2
         );
 
         //See if we are caching
-        if(ee()->Rr_tag->cache == 'y' || ee()->Rr_tag->cache == 'yes') {
+        if(ee()->Rr_properties_tag->cache == 'y' || ee()->Rr_properties_tag->cache == 'yes') {
             $data = ee()->Rr_cache->get($cacheKey);
         }
 
@@ -131,7 +142,7 @@ class Rets_rabbit_v2
             } else {
                 $data = $res->getResponse()['value'];
 
-                ee()->Rr_cache->set($cacheKey, $data, ee()->Rr_tag->cache_duration);
+                ee()->Rr_cache->set($cacheKey, $data, ee()->Rr_properties_tag->cache_duration);
             }
         }
 
@@ -143,9 +154,9 @@ class Rets_rabbit_v2
         $resources = new Collection($data, new Property_transformer);
         $viewData = $this->fractal->createData($resources)->toArray();
 
-        return ee()->Rr_view
+        return ee()->Rr_properties_view
             ->setVariables($viewData)
-            ->stripTags(ee()->Rr_tag->strip_tags)
+            ->stripTags(ee()->Rr_properties_tag->strip_tags)
             ->setConditionals($cond)
             ->process($cond['has_results']);
     }
@@ -158,21 +169,21 @@ class Rets_rabbit_v2
     public function property()
     {
         //Load libs
-        ee()->load->library('tags/Rr_v2_property_tag', null, 'Rr_tag');
-        ee()->load->library('Rr_v2_view_data_service', null, 'Rr_view');
+        ee()->load->library('tags/Rr_v2_property_tag', null, 'Rr_property_tag');
+        ee()->load->library('Rr_v2_view_data_service', null, 'Rr_property_view');
 
         //Parse template params
-        ee()->Rr_tag->parseParams();
+        ee()->Rr_property_tag->parseParams();
 
         //Convert params to search terms
-        $params = ee()->Rr_tag->toApiParams();
+        $params = ee()->Rr_property_tag->toApiParams();
 
         //See if short code supplied
-        if(ee()->Rr_tag->short_code) {
-            $serverId = ee()->Rr_server->getByShortCode($this->siteId, ee()->Rr_tag->short_code);
+        if(ee()->Rr_property_tag->short_code) {
+            $serverId = ee()->Rr_server->getByShortCode($this->siteId, ee()->Rr_property_tag->short_code);
 
             if(!$serverId) {
-                ee()->output->fatal_error("Could not find a server having short code: " . ee()->Rr_tag->short_code, 404);
+                ee()->output->fatal_error("Could not find a server having short code: " . ee()->Rr_property_tag->short_code, 404);
             }
 
             if(isset($params['$filter']) && strlen($params['$filter'])) {
@@ -182,7 +193,7 @@ class Rets_rabbit_v2
             }
         }
         
-        $cacheKey = md5(ee()->Rr_tag->mls_id) . serialize($params);
+        $cacheKey = md5(ee()->Rr_property_tag->mls_id) . serialize($params);
         $cacheKey = hash('sha256', $cacheKey);
 
         //Set the view data props
@@ -193,13 +204,13 @@ class Rets_rabbit_v2
         );
 
         //Check if caching results
-        if(ee()->Rr_tag->cache == 'y' || ee()->Rr_tag->cache == 'yes') {
+        if(ee()->Rr_property_tag->cache == 'y' || ee()->Rr_property_tag->cache == 'yes') {
             $data = ee()->Rr_cache->get($cacheKey);
         }
 
         if(is_null($data) || !$data) {
             //Hit the API for data
-            $res = ee()->Rr_properties->find(ee()->Rr_tag->mls_id, $params);
+            $res = ee()->Rr_properties->find(ee()->Rr_property_tag->mls_id, $params);
 
             if(!$res->didSucceed()) {
                 $cond['has_results'] = 'FALSE';
@@ -207,7 +218,7 @@ class Rets_rabbit_v2
             } else {
                 $data = $res->getResponse();
 
-                ee()->Rr_cache->set($cacheKey, $data, ee()->Rr_tag->cache_duration);
+                ee()->Rr_cache->set($cacheKey, $data, ee()->Rr_property_tag->cache_duration);
             }
         }
 
@@ -219,9 +230,9 @@ class Rets_rabbit_v2
         $resources = new Item($data, new Property_transformer);
         $viewData = array($this->fractal->createData($resources)->toArray());
 
-        return ee()->Rr_view
+        return ee()->Rr_property_view
             ->setVariables($viewData)
-            ->stripTags(ee()->Rr_tag->strip_tags)
+            ->stripTags(ee()->Rr_property_tag->strip_tags)
             ->setConditionals($cond)
             ->process($cond['has_results']);
     }
@@ -277,7 +288,6 @@ class Rets_rabbit_v2
     {
         ee()->load->library('logger');
         ee()->load->library('Rr_v2_form_service', null, 'Rr_forms');
-        ee()->load->model('rets_rabbit_v2_search', 'Rr_search');
 
         $params = array();
 
@@ -327,14 +337,13 @@ class Rets_rabbit_v2
     public function search_results()
     {
         ee()->load->library('pagination');
-        ee()->load->library('tags/Rr_v2_search_results_tag', null, 'Rr_tag');
-        ee()->load->library('Rr_v2_view_data_service', null, 'Rr_view');
-        ee()->load->model('rets_rabbit_v2_search', 'Rr_search');
+        ee()->load->library('tags/Rr_v2_search_results_tag', null, 'Rr_search_results_tag');
+        ee()->load->library('Rr_v2_view_data_service', null, 'Rr_search_results_view');
 
         //Parse template params
-        ee()->Rr_tag->parseParams();
+        ee()->Rr_search_results_tag->parseParams();
 
-        $searchId = ee()->Rr_tag->search_id;
+        $searchId = ee()->Rr_search_results_tag->search_id;
         $pagination = ee()->pagination->create();
 
         //Remove pagination from template
@@ -349,8 +358,17 @@ class Rets_rabbit_v2
 
         //Search Params
         $params = ee()->Rr_search->params;
-        $overrideParams = ee()->Rr_tag->toApiParams();
-        $params = array_merge($params, $overrideParams);
+        $overrideParams = ee()->Rr_search_results_tag->toApiParams();
+        $mergedParams = array_merge($params, $overrideParams);
+        $params = array();
+
+        //Remove params with empty values
+        foreach($mergedParams as $k => $v) {
+            if(!empty($v) && !is_null($v)) {
+                $params[$k] = $v;
+            }
+        }
+
 
         if(ee()->Rr_search->short_code) {
             $serverId = ee()->Rr_server->getByShortCode($this->siteId, ee()->Rr_search->short_code);
@@ -368,7 +386,7 @@ class Rets_rabbit_v2
 
         //Count Params
         $countParams = array(
-            '$select' => ee()->Rr_tag->getCountMethod(),
+            '$select' => ee()->Rr_search_results_tag->getCountMethod(),
             '$filter' => $params['$filter']
         );
         $countError = false;
@@ -407,10 +425,10 @@ class Rets_rabbit_v2
             $resources = new Collection($data, new Property_transformer);
             $viewData = $this->fractal->createData($resources)->toArray();
 
-            return ee()->Rr_view
+            return ee()->Rr_search_results_view
                 ->paginate($pagination)
                 ->setVariables($viewData)
-                ->stripTags(ee()->Rr_tag->strip_tags)
+                ->stripTags(ee()->Rr_search_results_tag->strip_tags)
                 ->setConditionals($cond)
                 ->process($cond['has_results']);
         }
@@ -418,7 +436,7 @@ class Rets_rabbit_v2
         // Build paginator
         if($pagination->paginate === TRUE) {
             //Build the pagination
-            $pagination->build($total, ee()->Rr_tag->per_page);
+            $pagination->build($total, ee()->Rr_search_results_tag->per_page);
 
             
             //Get the current page
@@ -431,7 +449,7 @@ class Rets_rabbit_v2
         }
 
         //Check if caching results
-        if(ee()->Rr_tag->cache == 'y' || ee()->Rr_tag->cache == 'yes') {
+        if(ee()->Rr_search_results_tag->cache == 'y' || ee()->Rr_search_results_tag->cache == 'yes') {
             $data = ee()->Rr_cache->get($searchCacheKey);
         }
 
@@ -449,7 +467,7 @@ class Rets_rabbit_v2
             } else {
                 $data = $res->getResponse()['value'];
 
-                ee()->Rr_cache->set($searchCacheKey, $data, ee()->Rr_tag->cache_duration);
+                ee()->Rr_cache->set($searchCacheKey, $data, ee()->Rr_search_results_tag->cache_duration);
             }
         }
 
@@ -461,10 +479,10 @@ class Rets_rabbit_v2
         $resources = new Collection($data, new Property_transformer);
         $viewData = $this->fractal->createData($resources)->toArray();
 
-        return ee()->Rr_view
+        return ee()->Rr_search_results_view
             ->paginate($pagination)
             ->setVariables($viewData)
-            ->stripTags(ee()->Rr_tag->strip_tags)
+            ->stripTags(ee()->Rr_search_results_tag->strip_tags)
             ->setConditionals($cond)
             ->process($cond['has_results']);
     }
