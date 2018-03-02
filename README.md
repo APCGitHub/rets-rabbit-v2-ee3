@@ -430,6 +430,9 @@ Sometimes the data from a RETS server isn't clean, this could include HTML or ot
 
 # Changelog
 
+### 1.0.3
+- Fixed alias name collisions when using multiple tags on the same page
+
 ### 1.0.2
 - Update library aliases to be more unique
 
