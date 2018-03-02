@@ -291,7 +291,7 @@ The above input will generate the following ODATA partial filter:
 
 **Single Field / Multiple Values**
 
-`<input name="rr:PostalCode-ge-[]" type="checkbox" value="">`
+`<input name="rr:PostalCode-eq-[]" type="checkbox" value="">`
 
 If we had say, 5 checkboxes of which 3 were checked when the form was submitted, the following partial filter would be generated:
 
