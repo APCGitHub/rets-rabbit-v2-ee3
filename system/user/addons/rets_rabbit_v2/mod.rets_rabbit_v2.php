@@ -68,6 +68,7 @@ class Rets_rabbit_v2
 
         //Convert params to search terms
         $params = ee()->Rr_properties_tag->toApiParams();
+        $transformer = new Property_transformer;
 
         //See if short code supplied
         if(ee()->Rr_properties_tag->short_code) {
@@ -140,10 +141,15 @@ class Rets_rabbit_v2
                 $cond['has_error'] = 'TRUE';
                 $data = array();
             } else {
+                $d = $res->getResponse();
+                $t = $d['@retsrabbit.total_results'];
                 $data = $res->getResponse()['value'];
+                $transformer->totalRecords = $t;
 
                 ee()->Rr_cache->set($cacheKey, $data, ee()->Rr_properties_tag->cache_duration);
             }
+        } else {
+            $transformer->totalRecords = count($data);
         }
 
         if(empty($data)) {
@@ -151,7 +157,7 @@ class Rets_rabbit_v2
         }
 
         //Massage the data for view consumption
-        $resources = new Collection($data, new Property_transformer);
+        $resources = new Collection($data, $transformer);
         $viewData = $this->fractal->createData($resources)->toArray();
 
         return ee()->Rr_properties_view
@@ -340,6 +346,8 @@ class Rets_rabbit_v2
         ee()->load->library('tags/Rr_v2_search_results_tag', null, 'Rr_search_results_tag');
         ee()->load->library('Rr_v2_view_data_service', null, 'Rr_search_results_view');
 
+        $transformer = new Property_transformer;
+
         //Parse template params
         ee()->Rr_search_results_tag->parseParams();
 
@@ -422,7 +430,7 @@ class Rets_rabbit_v2
             $cond['has_error'] = 'TRUE';
 
              //Massage the data for view consumption
-            $resources = new Collection($data, new Property_transformer);
+            $resources = new Collection($data, $transformer);
             $viewData = $this->fractal->createData($resources)->toArray();
 
             return ee()->Rr_search_results_view
@@ -432,6 +440,9 @@ class Rets_rabbit_v2
                 ->setConditionals($cond)
                 ->process($cond['has_results']);
         }
+
+        //Set the total records count for the transformer
+        $transformer->totalRecords = $total;
         
         // Build paginator
         if($pagination->paginate === TRUE) {
@@ -476,7 +487,7 @@ class Rets_rabbit_v2
         }
 
         //Massage the data for view consumption
-        $resources = new Collection($data, new Property_transformer);
+        $resources = new Collection($data, $transformer);
         $viewData = $this->fractal->createData($resources)->toArray();
 
         return ee()->Rr_search_results_view

@@ -17,6 +17,12 @@ class Property_transformer extends TransformerAbstract
     protected $defaultIncludes = array('photos', 'open_houses');
 
     /**
+     * Track the total number of properties
+     * @var integer
+     */
+    public $totalRecords = null;
+
+    /**
      * @param array $listing
      * @return void
      */
@@ -50,6 +56,8 @@ class Property_transformer extends TransformerAbstract
         if(isset($data['listing'])) {
             unset($data['listing']);
         }
+
+        $data['total_results'] = $this->totalRecords;
 
         return $data;
     }
