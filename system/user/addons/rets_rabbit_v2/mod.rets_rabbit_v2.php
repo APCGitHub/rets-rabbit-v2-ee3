@@ -142,9 +142,13 @@ class Rets_rabbit_v2
                 $data = array();
             } else {
                 $d = $res->getResponse();
-                $t = $d['@retsrabbit.total_results'];
+
+                if(isset($d['@retsrabbit.total_results'])) {
+                    $t = $d['@retsrabbit.total_results'];
+                    $transformer->totalRecords = $t;
+                }
+
                 $data = $res->getResponse()['value'];
-                $transformer->totalRecords = $t;
 
                 ee()->Rr_cache->set($cacheKey, $data, ee()->Rr_properties_tag->cache_duration);
             }
