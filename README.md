@@ -430,6 +430,9 @@ Sometimes the data from a RETS server isn't clean, this could include HTML or ot
 
 # Changelog
 
+### 1.0.4
+- Refactored search_results tag to only execute one API call instead of using two separate calls to fetch the pagination data and search results
+
 ### 1.0.3
 - Fixed alias name collisions when using multiple tags on the same page
 
