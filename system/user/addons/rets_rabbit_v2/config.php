@@ -15,5 +15,5 @@ if ( ! defined('RETS_RABBIT_V2_NAME'))
 {
 	define('RETS_RABBIT_V2_NAME',    'Rets_rabbit_v2');
 	define('RETS_RABBIT_V2_PACKAGE', 'rets_rabbit_v2');
-	define('RETS_RABBIT_V2_VERSION', '1.0.0');
+	define('RETS_RABBIT_V2_VERSION', '1.0.5');
 }
