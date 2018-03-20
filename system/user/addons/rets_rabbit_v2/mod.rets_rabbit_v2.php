@@ -411,12 +411,6 @@ class Rets_rabbit_v2
             $params['$skip'] = $offset;
         }
 
-        if(isset($params['$select']) && strlen($params['$select'])) {
-            $params['$select'] .= ', ' . $count;
-        } else {
-            $params['$select'] = $count;
-        }
-
         //Generate search hash key
         $searchCacheKey = hash('sha256', serialize($params));
         $shouldCache = ee()->Rr_search_results_tag->cache == 'y' || ee()->Rr_search_results_tag->cache == 'yes';
@@ -446,8 +440,15 @@ class Rets_rabbit_v2
                 $resData = $res->getResponse();
                 $data = $resData['value'];
 
-                if(isset($resData['@retsrabbit.total_results'])) {
-                    $total = $resData['@retsrabbit.total_results'];
+                //get the count for pagination
+                $params['$select'] = $count;
+                $res = ee()->Rr_properties->search($params);
+
+                if($res->didSucceed()) {
+                    $resData = $res->getResponse();
+                    if(isset($resData['@retsrabbit.total_results'])) {
+                        $total = $resData['@retsrabbit.total_results'];
+                    }
                 }
 
                 ee()->Rr_cache->set($searchCacheKey, $resData, ee()->Rr_search_results_tag->cache_duration);
@@ -458,7 +459,7 @@ class Rets_rabbit_v2
             $cond['has_results'] = 'FALSE';
         } else {
             // Set total to the size of data if for some reason $total is 0
-            if($total == 0 && !empty($data)) {
+            if(!empty($data) && $total < sizeof($data)) {
                 $total = sizeof($data);
             }
 
