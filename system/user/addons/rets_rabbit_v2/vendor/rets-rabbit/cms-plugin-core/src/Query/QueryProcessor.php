@@ -244,18 +244,20 @@ class QueryProcessor
 				$q .= ' or ';
 		}
 
-		$binding = $this->prepareBinding($binding);
+		//$binding = $this->prepareBinding($binding);
+        $quoteBinding = $this->prepareBinding($binding);
 
 		if(in_array($operator, $this->stringFuncs)){
 			if(in_array($modifier, $this->stringMods)){
-				$q .= "$operator($modifier({$clause['field']}), $binding)";
+				$q .= "$operator($modifier({$clause['field']}), $quoteBinding)";
 			} else {
-				$q .= "$operator({$clause['field']}, $binding)";
+				$q .= "$operator({$clause['field']}, $quoteBinding)";
 			}
 		} elseif(in_array($modifier, $this->stringMods)) {
-			$q .= "$modifier({$clause['field']}) $operator $binding";
+			$q .= "$modifier({$clause['field']}) $operator $quoteBinding";
 		} else {
-			$q .= "{$clause['field']} $operator $binding";
+		    $binding = $this->specialPrepareBinding($binding, $clause['field'], $operator);
+		    $q .= "{$clause['field']} $operator $binding";
 		}
 
 		$this->query['$filter'] .= $q;
@@ -286,10 +288,18 @@ class QueryProcessor
 			return "";
 		}
 
-		if(is_numeric($binding)){
-			return $binding;
-		} else {
-			return "'$binding'";
-		}
+        return "'$binding'";
 	}
+
+	private function specialPrepareBinding($binding, $field, $op) {
+        if(is_string($binding) && strlen($binding) < 1) {
+            return "";
+        }
+
+        if(is_numeric($binding) && $field != "ListingId" && ($op != "eq" && $op != "ne")) {
+            return $binding;
+        } else {
+            return "'$binding'";
+        }
+    }
 }

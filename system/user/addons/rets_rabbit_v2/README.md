@@ -291,7 +291,7 @@ The above input will generate the following ODATA partial filter:
 
 **Single Field / Multiple Values**
 
-`<input name="rr:PostalCode-ge-[]" type="checkbox" value="">`
+`<input name="rr:PostalCode-eq-[]" type="checkbox" value="">`
 
 If we had say, 5 checkboxes of which 3 were checked when the form was submitted, the following partial filter would be generated:
 
@@ -429,6 +429,19 @@ Sometimes the data from a RETS server isn't clean, this could include HTML or ot
 ```
 
 # Changelog
+
+### 1.0.4
+- Refactored search_results tag to only execute one API call instead of using two separate calls to fetch the pagination data and search results
+
+### 1.0.3
+- Fixed alias name collisions when using multiple tags on the same page
+
+### 1.0.2
+- Update library aliases to be more unique
+
+### 1.0.1
+- Fixed possible class name collisions in models and libraries
+- Fixed namespacing spelling
 
 ### 1.0.0
 - Initial release of Rets Rabbit for EE3 & EE4 to users.

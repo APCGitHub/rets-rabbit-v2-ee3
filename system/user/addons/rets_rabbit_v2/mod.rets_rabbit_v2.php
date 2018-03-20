@@ -9,8 +9,8 @@
 * @author      Andrew Clinton contact@anecka.com
 * @copyright   Copyright (c) 2017, Andrew Clinton
 * @link        http://retsrabbit.com
-* @license		Creative Commons, Attribution-NoDerivatives 4.0
-* 				http://creativecommons.org/licenses/by-nd/4.0/legalcode
+* @license      Creative Commons, Attribution-NoDerivatives 4.0
+*               http://creativecommons.org/licenses/by-nd/4.0/legalcode
 */
 
 require PATH_THIRD . "rets_rabbit_v2/vendor/autoload.php";
@@ -351,17 +351,16 @@ class Rets_rabbit_v2
         ee()->load->library('Rr_v2_view_data_service', null, 'Rr_search_results_view');
 
         $transformer = new Property_transformer;
+        $pagination = ee()->pagination->create();
 
         //Parse template params
         ee()->Rr_search_results_tag->parseParams();
-
-        $searchId = ee()->Rr_search_results_tag->search_id;
-        $pagination = ee()->pagination->create();
 
         //Remove pagination from template
         ee()->TMPL->tagdata = $pagination->prepare(ee()->TMPL->tagdata);
 
         //Fetch the search query from the DB
+        $searchId = ee()->Rr_search_results_tag->search_id;
         ee()->Rr_search->get($searchId);
 
         if(!ee()->Rr_search->id) {
@@ -381,7 +380,14 @@ class Rets_rabbit_v2
             }
         }
 
+        //Set the view data props
+        $data = array();
+        $cond = array(
+            'has_results'   => 'TRUE',
+            'has_error'     => 'FALSE'
+        );
 
+        // Handle short code scope
         if(ee()->Rr_search->short_code) {
             $serverId = ee()->Rr_server->getByShortCode($this->siteId, ee()->Rr_search->short_code);
 
@@ -396,80 +402,37 @@ class Rets_rabbit_v2
             }
         }
 
-        //Count Params
-        $countParams = array(
-            '$select' => ee()->Rr_search_results_tag->getCountMethod(),
-            '$filter' => $params['$filter']
-        );
-        $countError = false;
+        // Pagination stuffs
+        $offset = $this->getPaginationPage();
+        $count = ee()->Rr_search_results_tag->getCountMethod();
+        $total = 0;
 
-        //Generate count hash key
-        $countCacheKey = hash('sha256', serialize($countParams));
-
-        //Set the view data props
-        $data = array();
-        $cond = array(
-            'has_results'   => 'TRUE',
-            'has_error'     => 'FALSE'
-        );
-        $total = ee()->Rr_cache->get($countCacheKey);
-
-        //Fetch search count
-        if(is_null($total) || !$total) {
-            //Hit the API for data
-            $res = ee()->Rr_properties->search($countParams);
-
-            if(!$res->didSucceed()) {
-                $countError = true;
-            } else {
-                $total = $res->getResponse()['@retsrabbit.total_results'];
-
-                ee()->Rr_cache->set($countCacheKey, $total, 3600);
-            }
+        if($offset > 0) {
+            $params['$skip'] = $offset;
         }
 
-        //Render the view if the pagination failed for some reason
-        if(is_null($total) || !$total) {
-            $cond['has_results'] = 'FALSE';
-            $cond['has_error'] = 'TRUE';
-
-             //Massage the data for view consumption
-            $resources = new Collection($data, $transformer);
-            $viewData = $this->fractal->createData($resources)->toArray();
-
-            return ee()->Rr_search_results_view
-                ->paginate($pagination)
-                ->setVariables($viewData)
-                ->stripTags(ee()->Rr_search_results_tag->strip_tags)
-                ->setConditionals($cond)
-                ->process($cond['has_results']);
-        }
-
-        //Set the total records count for the transformer
-        $transformer->totalRecords = $total;
-        
-        // Build paginator
-        if($pagination->paginate === TRUE) {
-            //Build the pagination
-            $pagination->build($total, ee()->Rr_search_results_tag->per_page);
-
-            
-            //Get the current page
-            $currentPage = $pagination->current_page;
-
-            //Set the offset based on the current page
-            if($currentPage > 1) {
-                $params['$skip'] = ($currentPage - 1) * $params['$top'];
-            }
-        }
-
-        //Check if caching results
-        if(ee()->Rr_search_results_tag->cache == 'y' || ee()->Rr_search_results_tag->cache == 'yes') {
-            $data = ee()->Rr_cache->get($searchCacheKey);
+        if(isset($params['$select']) && strlen($params['$select'])) {
+            $params['$select'] .= ', ' . $count;
+        } else {
+            $params['$select'] = $count;
         }
 
         //Generate search hash key
         $searchCacheKey = hash('sha256', serialize($params));
+        $shouldCache = ee()->Rr_search_results_tag->cache == 'y' || ee()->Rr_search_results_tag->cache == 'yes';
+
+        //Check if caching results
+        if($shouldCache) {
+            $cacheData = ee()->Rr_cache->get($searchCacheKey);
+
+            if(isset($cacheData['value'])) {
+                $data = $cacheData['value'];    
+            }
+
+            if(isset($cacheData['@retsrabbit.total_results'])) {
+                $total = $cacheData['@retsrabbit.total_results'];
+            }
+        }
 
         //Fetch search results
         if(is_null($data) || !$data) {
@@ -480,14 +443,32 @@ class Rets_rabbit_v2
                 $cond['has_results'] = 'FALSE';
                 $cond['has_error'] = 'TRUE';
             } else {
-                $data = $res->getResponse()['value'];
+                $resData = $res->getResponse();
+                $data = $resData['value'];
 
-                ee()->Rr_cache->set($searchCacheKey, $data, ee()->Rr_search_results_tag->cache_duration);
+                if(isset($resData['@retsrabbit.total_results'])) {
+                    $total = $resData['@retsrabbit.total_results'];
+                }
+
+                ee()->Rr_cache->set($searchCacheKey, $resData, ee()->Rr_search_results_tag->cache_duration);
             }
         }
 
         if(empty($data)) {
             $cond['has_results'] = 'FALSE';
+        } else {
+            // Set total to the size of data if for some reason $total is 0
+            if($total == 0 && !empty($data)) {
+                $total = sizeof($data);
+            }
+
+            // Build pagination if template asks for it
+            if($pagination->paginate === TRUE) {
+                $pagination->build($total, ee()->Rr_search_results_tag->per_page);
+            }
+
+            //Set the total records count for the transformer
+            $transformer->totalRecords = $total;
         }
 
         //Massage the data for view consumption
@@ -500,5 +481,25 @@ class Rets_rabbit_v2
             ->stripTags(ee()->Rr_search_results_tag->strip_tags)
             ->setConditionals($cond)
             ->process($cond['has_results']);
+    }
+
+    /**
+     * [getPaginationPage description]
+     * @return [type] [description]
+     */
+    private function getPaginationPage() {
+        //detect EE's pagination URL pattern and work up the offset
+        //to send to the RR api
+        $test = ee()->uri->segment(ee()->uri->total_segments());
+
+        if(preg_match("/P(?<digit>\d+)/", $test, $matches)) {
+            if(sizeof($matches) > 0) {
+                return intval($matches['digit']);// + 1;
+            } {
+                return 0;
+            }
+        }
+
+        return 0;
     }
 }
