@@ -430,6 +430,9 @@ Sometimes the data from a RETS server isn't clean, this could include HTML or ot
 
 # Changelog
 
+### 1.0.5
+- Pagination still have to two API calls for now. Reworked the ordering
+
 ### 1.0.4
 - Refactored search_results tag to only execute one API call instead of using two separate calls to fetch the pagination data and search results
 
